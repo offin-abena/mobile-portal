@@ -1,0 +1,21 @@
+<?php
+return [
+    'auth_base_url' => env('Auth_BASE_URL'),
+    'auth_profile' => env('AUTH_PROFILE'),
+    'merchant_base_url' => env('MERCHANT_BASE_URL'),
+    'ecollect_base_url' => env('ECOLLECT_BASE_URL'),
+    'ecollect_polymorph_phone_number' => env('POLYMORPH_PHONE_NUMBER'),
+    'ecollect_authorization' => env('ECOLLECT_AUTHORIZATION'),
+    'ecollect_terminal_id' => env('ECOLLECT_TERMINAL_ID'),
+    'ecollect_async_request_id' => env('ECOLLECT_ASYNC_REQUEST_ID'),
+    'ecollect_referrer'=>env('ECOLLECT_REFERRER'),
+    'ecollect_api_key'=>env('ECOLLECT_APIKEY'),
+    'subs_api_id'=>env('SUBS_API_ID'),
+    'subs_api_key'=>env('SUBS_API_KEY'),
+    'subs_base_url'=>env('SUBS_BASE_URL'),
+    'settlement_account_name'=>env('SETTLEMENT_ACCOUNT_NAME'),
+    'settlement_routing_number'=>env('SETTLEMENT_ACCOUNT_ROUTING_NUMBER'),
+    'settlement_code'=>env('SETTLEMENT_CODE'),
+    'settlement_username'=>env('SETTLEMENT_USERNAME'),
+    'settlement_password'=>env('SETTLEMENT_PASSWORD'),
+];

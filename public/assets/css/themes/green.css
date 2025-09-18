@@ -1,0 +1,72 @@
+.page-content {
+    background: #04310f;
+}
+
+.navbar .logo-box {
+    background: #22baa0;
+}
+
+.navbar .logo-box a {
+    color: #fff;
+}
+
+.sidebar {
+    background: rgb(24, 32, 46);
+    width:150px !important;
+}
+
+.sidebar-header {
+    background: rgb(24, 32, 46);
+}
+
+.sidebar-profile span small {
+    color: #899dc1;
+}
+
+.menu {
+    background: #04310f;
+
+
+}
+
+.menu.accordion-menu a {
+    color: #899dc1;
+}
+
+.menu.accordion-menu > li > a:hover {
+	background: #091a0d;
+    color: #fff;
+}
+
+.menu.accordion-menu > li.active > a,
+.menu.accordion-menu > li.active.open > a {
+	background: #226834;
+    color: #fff;
+    border-bottom: #0b6b23 1px solid !important;
+}
+
+.small-sidebar:not(.page-sidebar-fixed) .accordion-menu li.droplink:hover > a,
+.horizontal-bar .accordion-menu > li.droplink:hover > a,
+.menu.accordion-menu ul,
+.menu.accordion-menu li.open > a,
+.hover-menu .accordion-menu > li.droplink:hover > a {
+    background: #2B384E;
+    color: #fff;
+}
+
+.menu.accordion-menu ul li a:hover,
+.menu.accordion-menu ul li.active a {
+	background: #34425A;
+    color: #fff;
+}
+
+.menu.accordion-menu ul li a {
+    color: #899dc1;
+}
+
+
+ul.menu.accordion-menu{
+    width: 100% !important;
+}
+
+
