@@ -5,9 +5,10 @@
          </div>
          <div class="card-body">
              @csrf
+             <input type="hidden" name="id" id="id">
              <div class="form-group mb-2">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" name="username" value="{{ old('username') }}" required>
+                <input type="text" class="form-control" name="username" id="username" value="{{ old('username') }}" required>
             </div>
 
             <div class="form-group mb-2">
@@ -22,22 +23,22 @@
 
             <div class="form-group mb-2">
                 <label for="pin">Reset PIN</label>
-                <input type="text" class="form-control" name="pin" value="{{ old('pin') }}" required>
+                <input type="text" class="form-control" name="pin" id="pin" value="{{ old('pin') }}" required>
             </div>
 
             <div class="form-group mb-2">
                 <label for="fullName">Full Name</label>
-                <input type="text" class="form-control" name="fullName" value="{{ old('fullName') }}" required>
+                <input type="text" class="form-control" name="fullName" id="fullName" value="{{ old('fullName') }}" required>
             </div>
 
             <div class="form-group mb-2">
                 <label for="phoneNum">Phone Number</label>
-                <input type="text" class="form-control" name="phoneNum" value="{{ old('phoneNum') }}" required>
+                <input type="text" class="form-control" name="phoneNum" id="phoneNum" value="{{ old('phoneNum') }}" required>
             </div>
 
             <div class="form-group mb-2">
                 <label for="emailadd">E-mail Address</label>
-                <input type="email" class="form-control" name="emailadd" value="{{ old('emailadd') }}" required>
+                <input type="email" class="form-control" name="emailadd" id="emailadd" value="{{ old('emailadd') }}" required>
             </div>
 
             <div class="form-group mb-2">

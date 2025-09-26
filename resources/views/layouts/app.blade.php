@@ -391,7 +391,7 @@
       </li>
     </ul>
   </li>
-  <li class="nav-item {{ request()->routeIs('users.systemAccount') || request()->routeIs('prices.services') || request()->routeIs('prices.main') || request()->routeIs('currencies.index') || request()->routeIs('quota.index') || request()->routeIs('settlements.capital') ? 'menu-open' : '' }}">
+  <li class="nav-item {{ request()->routeIs('users.systemAccount') || request()->routeIs('services.index') || request()->routeIs('prices.main') || request()->routeIs('currencies.index') || request()->routeIs('quota.index') || request()->routeIs('settlements.capital') ? 'menu-open' : '' }}">
     <a href="#" class="nav-link">
       <i class="fa fa-money"></i>
       <p>
@@ -410,7 +410,7 @@
       @endif
 
       <li class="nav-item">
-        <a href="{{ route('prices.services') }}" class="nav-link {{ request()->routeIs('prices.services') ? 'active' : '' }}">
+        <a href="{{ route('services.index') }}" class="nav-link {{ request()->routeIs('services.index') ? 'active' : '' }}">
           <i class="nav-icon bi bi-circle"></i>
           <p>Services</p>
         </a>
@@ -613,7 +613,7 @@
       </li>
     </ul>
   </li>
-  <li class="nav-item {{ request()->routeIs('customers.top_selling') || request()->routeIs('transactions.bog_monthly_report') || request()->routeIs('customers.partial_onboarding') || request()->routeIs('customers.customer_report') || request()->routeIs('transactions.index') || request()->routeIs('transactions.monthly_revenue') || request()->routeIs('customers.active_customers') || request()->routeIs('forensics.index') || request()->routeIs('customers.referrals') ? 'menu-open' : '' }}">
+  <li class="nav-item {{ request()->routeIs('customers.transactions') || request()->routeIs('transactions.bog_monthly_report') || request()->routeIs('customers.partial_onboarding') || request()->routeIs('customers.customer_report') || request()->routeIs('transactions.index') || request()->routeIs('transactions.monthly_revenue') || request()->routeIs('customers.active_customers') || request()->routeIs('forensics.index') || request()->routeIs('customers.referrals') ? 'menu-open' : '' }}">
     <a href="#" class="nav-link">
       <i class="fa fa-server"></i>
       <p>
@@ -623,7 +623,7 @@
     </a>
     <ul class="nav nav-treeview">
       <li class="nav-item">
-        <a href="{{ route('customers.top_selling') }}" class="nav-link {{ request()->routeIs('customers.top_selling') ? 'active' : '' }}">
+        <a href="{{  request()->routeIs('customers.transactions') }}" class="nav-link {{ request()->routeIs('customers.transactions') ? 'active' : '' }}">
           <i class="nav-icon bi bi-circle"></i>
           <p>Top Selling Customers</p>
         </a>
@@ -797,6 +797,7 @@
     <!--end::OverlayScrollbars Configure-->
 
     <!-- OPTIONAL SCRIPTS -->
+
     @yield('scripts')
     <!--end::Script-->
   </body>

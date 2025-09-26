@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Admin;
 
 class AccountTypeFactory extends Factory
 {
@@ -27,8 +28,8 @@ class AccountTypeFactory extends Factory
         ];
 
         return [
-            'accountType' => $this->faker->randomElement($types),
-            'added_by'    => $this->faker->randomNumber(6, true), // or User::factory()->id
+            'accountType' => $this->faker->unique()->randomElement($types),
+            'added_by'    => Admin::inRandomOrder()->first()->id??null, // or User::factory()->id
             'dateTime'    => $this->faker->dateTimeThisYear(),
         ];
     }

@@ -28,7 +28,7 @@
                                             <th>Bank Account Name</th>
 											<th>Async ID</th>
 											<th>APP VERSION</th>
-											<th>Action</th>
+											{{-- <th>Action</th> --}}
                     </tr>
                 </thead>
             </table>

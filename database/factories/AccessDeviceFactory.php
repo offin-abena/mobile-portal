@@ -20,7 +20,7 @@ class AccessDeviceFactory extends Factory
     {
          return [
             // Try to reference an existing user id, otherwise create one
-            //'user_id'     => User::query()->inRandomOrder()->value('id') ?? User::factory(),
+            'user_id'     => User::query()->inRandomOrder()->value('id') ?? User::factory(),
 
             // Unique device code (UUID-ish)
             'device_code' => (string) \Str::uuid(),

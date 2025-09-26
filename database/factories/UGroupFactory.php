@@ -3,12 +3,14 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use App\Models\Admin;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
 class UGroupFactory extends Factory
 {
+    protected $model = \App\Models\UGroup::class;
+
     /**
      * Define the model's default state.
      *
@@ -31,8 +33,10 @@ class UGroupFactory extends Factory
 
         return [
             'groupName' => $this->faker->unique()->randomElement($groups),
-            'added_by'  => $this->faker->randomNumber(6, true), // or User::factory()->id if related
+            'added_by'  => Admin::inRandomOrder()->first()->id??null, // or User::factory()->id if related
             'dateTime'  => $this->faker->dateTimeThisYear(),
+            'created_at'=>now(),
+            'updated_at'=>now(),
         ];
     }
 

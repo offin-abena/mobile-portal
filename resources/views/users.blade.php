@@ -6,6 +6,40 @@
 
 <!-- DataTables Buttons CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+    .switch input { display: none; }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #ccc;
+        border-radius: 24px;
+        transition: .4s;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: .4s;
+    }
+    input:checked + .slider {
+        background-color: #4CAF50;
+    }
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+</style>
 @endsection
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -26,7 +60,7 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 <script>
  $(document).ready(function () {
-        $('#user-list').DataTable({
+      const table=$('#user-list').DataTable({
             "processing": true,
             "serverSide": true,        // enables server-side processing
             "ajax": {
@@ -38,20 +72,35 @@
             "ordering": true,
             "searching": true,
             "order": [[0, "desc"]],
-            "lengthMenu": [10, 25, 100, 100000],
+
             "language": {
                 "search": "_INPUT_",
                 "searchPlaceholder": "Search admins list..."
             },
             responsive: true,
-            dom: 'Bfrtip',
+            lengthMenu: [10, 100, 200, 500, 1000, 2000],
+            dom: 'Bfrltip',
 
             "columns": [
                     { data: "fullName", title: "Full Name" },
                     { data: "username", title: "User Name" },
                     { data: "userType", title: "User Type" },
-                    { data: "adminID", title: "Added By" },
-                    { data: "status", title: "Status" }
+                    { data: "AdminName", title: "Added By" },
+                    { data: "status", title: "Status" },
+                    {
+                        data: "status",
+                       render: function (data, type, row) {
+                        let checked = data === 'ACTIVE' ? 'checked' : '';
+                        return `
+                            <label class="switch">
+                            <input type="checkbox" class="toggle-status" ${checked}>
+                            <span class="slider"></span>
+                            </label>
+                        `
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
 
                 ],
             buttons: [
@@ -75,8 +124,24 @@
                     extend: 'print',
                     className: 'btn btn-info'
                 }
-            ]
+            ],
 
+
+        });
+
+        $('#user-list').on('change', '.toggle-status', function() {
+            let row = table.row($(this).parents('tr'));
+            let data = row.data();
+
+            let newStatus = this.checked ? 'ACTIVE' : 'INACTIVE';
+
+            data['status']=newStatus;
+
+            row.data(data).draw(false);
+
+            $.post("{{ route('api.users.admins.status.change') }}",{status:newStatus,id:data['id'],_token:$('input[name="_token"]').val()},function(res){
+                  console.log("Server updated:", res);
+            })
         });
     });
 </script>

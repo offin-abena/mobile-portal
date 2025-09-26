@@ -28,24 +28,27 @@
     <script>
         $(document).ready(function() {
             $('#customer-list-referred').DataTable({
+                "pageLength": 10, // show 10 rows per page
+                "ordering": true, // enable column sorting
+                "searching": true, // enable search box
                 "processing": true,
-                "serverSide": true,        // enables server-side processing
+                "serverSide": true,
                 "ajax": {
-                    "url": "{{ route('api.customers.referred') }}",   // 🔥 your backend endpoint here
-                    "type": "GET",              // or POST if your API expects it
-                    "dataSrc": "data"               // adjust based on your API JSON structure
+                    "url": "{{ route('api.customers.referred') }}",
+                    "type": "GET",
+                    "dataSrc": "data"
                 },
                 "pageLength": 10,
                 "ordering": true,
                 "searching": true,
                 "order": [[0, "desc"]],
-                "lengthMenu": [10, 25, 100, 100000],
                 "language": {
                     "search": "_INPUT_",
-                    "searchPlaceholder": "Search managers..."
+                    "searchPlaceholder": "Search customers..."
                 },
                 responsive: true,
-                dom: 'Bfrtip',
+                lengthMenu: [10, 100, 200, 500, 1000, 2000],
+                dom: 'Bfrltip',
                 "columns": [
                         { data: "created_at", title: "Date" },
                         { data: "full_name", title: "Full Name" },
@@ -79,6 +82,8 @@
                     }
                 ]
             });
+
+
         });
     </script>
 @endsection

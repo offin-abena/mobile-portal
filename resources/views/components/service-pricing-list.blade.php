@@ -10,8 +10,8 @@
             <table class="table table-striped align-middle" id="service_pricing">
                 <thead class="table-light">
                     <tr>
-                        <th>#</th>
-                            <th>ID</th>
+                                <th>#</th>
+                                <th>ID</th>
                                 <th>Country</th>
                                 <th>General Service</th>
                                 <th>Service Name</th>

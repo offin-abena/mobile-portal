@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Customer extends Authenticatable
 {
@@ -108,5 +109,16 @@ class Customer extends Authenticatable
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'uuid', 'id');
+    }
+
+    public function customer_account(): HasOne
+    {
+        return $this->hasOne(CustomerAccount::class, 'customerID', 'id');
+    }
+
+
+    public function account_type(): BelongsTo
+    {
+        return $this->belongsTo(AccountType::class, 'accountType', 'id');
     }
 }

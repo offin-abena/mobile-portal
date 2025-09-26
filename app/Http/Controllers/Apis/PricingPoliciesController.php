@@ -5,6 +5,8 @@ use App\Models\PricingPolicy;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class PricingPoliciesController extends Controller
@@ -22,6 +24,11 @@ class PricingPoliciesController extends Controller
         $query = PricingPolicy::query()
                 ->select(
                     'pricing_policy_tbl.id',
+                    'pricing_policy_tbl.senderUGroup as senderUGroupId',
+                    'pricing_policy_tbl.recipientUGroup as recipientUGroupId',
+                    'pricing_policy_tbl.senderAccountType as senderAccountTypeId',
+                    'pricing_policy_tbl.recipientAccountType as recipientAccountTypeId',
+                    'pricing_policy_tbl.serviceType as serviceTypeId',
                     'services.serviceName as serviceType',
                     'senderGroup.groupName as senderGroup',
                     'recipientGroup.groupName as recipientGroup',
@@ -92,5 +99,75 @@ class PricingPoliciesController extends Controller
             'recordsFiltered' => $recordsFiltered,
             'data' => $prices,
         ]);
+    }
+
+    public function create(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'senderGroup'          => 'required|integer',
+            'recipientGroup'       => 'required|integer',
+            'sendersAccountType'   => 'required|integer',
+            'recipientAccountType' => 'required|integer',
+            'serviceType'          => 'required|integer',
+            'priceType'            => 'required|in:ABSOLUTE,PERCENTAGE',
+            'price'                => 'required|numeric|min:0',
+            'senderCountry'        => 'required|string|max:5',
+            'recipientCountry'     => 'required|string|max:5',
+            'sysCommission'        => 'required|numeric|min:0',
+            'senderCommission'     => 'required|numeric|min:0',
+            'recipientCommission'  => 'required|numeric|min:0',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'statusCode'=>'400',
+                'message' => $validator->errors()->first(),
+                'data'=>null
+            ], 400);
+        }
+
+
+        // ✅ Get validated data
+        $validated = $validator->validated();
+
+        #return $validated;
+
+        // ✅ Map form fields to DB fields
+        $pricing = PricingPolicy::updateOrCreate(
+    [
+        'senderUGroup'         => $validated['senderGroup'],
+        'recipientUGroup'      => $validated['recipientGroup'],
+        'senderAccountType'    => $validated['sendersAccountType'],
+        'recipientAccountType' => $validated['recipientAccountType'],
+        'serviceType'          => $validated['serviceType']
+    ],
+    [
+        'priceType'                => $validated['priceType'],
+        'price_in_percent_absolute'=> $validated['price'],
+        'senderCountry'            => $validated['senderCountry'],
+        'recipientCountry'         => $validated['recipientCountry'],
+        'sysCommission'            => $validated['sysCommission'],
+        'senderCommission'         => $validated['senderCommission'],
+        'recipientCommission'      => $validated['recipientCommission'],
+        'pricing_by'               => auth()->id(),
+        'pricing_date'             => now(),
+    ]
+);
+
+
+        return response()->json([
+            'statusCode'=>'200',
+            'message' => 'Pricing created successfully',
+            'data'    => $pricing
+        ], 200);
+    }
+
+    public function show(PricingPolicy $price){
+          return response()->json([
+            'statusCode'=>'200',
+            'message' => 'Pricing details',
+            'data'    => $price
+        ], 200);
     }
 }

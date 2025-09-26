@@ -15,6 +15,7 @@
                         <th>Username</th>
                         <th>Account Type</th>
                         <th>Added By</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>

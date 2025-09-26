@@ -18,4 +18,5 @@ return [
     'settlement_code'=>env('SETTLEMENT_CODE'),
     'settlement_username'=>env('SETTLEMENT_USERNAME'),
     'settlement_password'=>env('SETTLEMENT_PASSWORD'),
+    'create_pricing_endpoint'=>env('CREATE_PRICING_ENDPOINT'),
 ];

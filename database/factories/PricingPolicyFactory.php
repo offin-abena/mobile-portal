@@ -30,8 +30,8 @@ class PricingPolicyFactory extends Factory
             'priceType'               => $this->faker->randomElement(['ABSOLUTE', 'PERCENTAGE']),
             'pricing_by'              => $this->faker->randomNumber(6, true), // bigint simulation
             'pricing_date'            => $this->faker->dateTimeThisYear(),
-            'senderCountry'           => $this->faker->countryCode(), // e.g. 'US'
-            'recipientCountry'        => $this->faker->countryCode(), // e.g. 'GH'
+            'senderCountry'           => $this->faker->randomElement(['GH', 'US']), // e.g. 'US'
+            'recipientCountry'        => $this->faker->randomElement(['GH', 'US']), // e.g. 'GH'
             'sysCommission'           => $this->faker->randomFloat(4, 0, 50),
             'senderCommission'        => $this->faker->randomFloat(4, 0, 50),
             'recipientCommission'     => $this->faker->randomFloat(4, 0, 50),

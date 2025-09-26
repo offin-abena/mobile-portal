@@ -16,7 +16,7 @@
                         <th>RATE</th>
                         <th>ADDED DATE</th>
                         <th>UPDATED BY</th>
-                        <th>UPDATED DATE</th>
+                       
                         <th>EDIT</th>
                     </tr>
                 </thead>

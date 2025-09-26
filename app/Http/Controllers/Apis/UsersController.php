@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Validator;
+
 
 class UsersController extends Controller
 {
@@ -21,13 +23,18 @@ class UsersController extends Controller
 
         // Base query
         $query = Admin::select([
-            'id',
-            'fullName',
-            'username',
-            'userType',
-            'adminID',
-            'status'
-        ]);
+            'admins.id',
+            'admins.fullName',
+            'admins.userCountry',
+            'admins.phoneNum',
+            'admins.username',
+            'admins.email',
+            'admins.userType',
+            'admins.adminID',
+            'b.fullName as AdminName',
+            'admins.status',
+            'admins.created_at'
+        ])->join('admins as b','admins.adminID','=','b.id');
 
         $recordsTotal = $query->count();
 
@@ -40,11 +47,13 @@ class UsersController extends Controller
 
         if (!empty($search)) {
             $query=$query->where(function ($q) use ($search) {
-                $q->where('fullName', 'like', "%{$search}%")
-                  ->orWhere('username', 'like', "%{$search}%")
-                  ->orWhere('userType', 'like', "%{$search}%")
-                  ->orWhere('adminID', 'like', "%{$search}%")
-                  ->orWhere('status', 'like', "%{$search}%");
+                $q->where('admins.fullName', 'like', "%{$search}%")
+                  ->orWhere('b.fullName ', 'like', "%{$search}%")
+                  ->orWhere('admins.email ', 'like', "%{$search}%")
+                  ->orWhere('admins.username', 'like', "%{$search}%")
+                  ->orWhere('admins.userType', 'like', "%{$search}%")
+                  ->orWhere('admins.adminID', 'like', "%{$search}%")
+                  ->orWhere('admins.status', 'like', "%{$search}%");
             });
         }
 
@@ -132,5 +141,83 @@ class UsersController extends Controller
             'recordsFiltered' => $recordsFiltered,
             'data' => $audit_logs,
         ]);
+    }
+
+    public function create_admin(Request $request){
+
+         $validator = Validator::make($request->all(), [
+            'phoneNum'          => 'required|string',
+            'password'       => 'required|sometimes|nullable|string|min:6',
+            //'password_confirmation'       => 'required|sometimes|nullable|string|confirmed',
+            'fullName'   => 'required|string',
+            'accountType' => 'required|in:SYSTEMADMIN,ADMINISTRATOR,MANAGER,OPERATIONS,VMANAGER,ACCOUNTANT,COMPLIANCE,FRONTDESK',
+            'country'          => 'required|in:GH'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'statusCode'=>'400',
+                'message' => $validator->errors()->first(),
+                'data'=>null
+            ], 400);
+        }
+
+
+        // ✅ Get validated data
+        $validated = $validator->validated();
+
+        #return $validated;
+
+        // ✅ Map form fields to DB fields
+        $pricing = Admin::updateOrCreate(
+            [
+                'fullName'         => $validated['fullName'],
+                'userType'      => $validated['accountType'],
+                'phoneNum'    => $validated['phoneNum'],
+                'userCountry' => $validated['country'],
+            ],
+            [
+                'password'                => $validated['password'],
+                'adminID'               => auth()->id(),
+            ]
+        );
+
+
+        return response()->json([
+            'statusCode'=>'200',
+            'message' => 'Admin saved successfully',
+            'data'    => $pricing
+        ], 200);
+    }
+
+    public function change_status_admin(Request $request){
+
+         $validator = Validator::make($request->all(), [
+            'status'   => 'required|in:ACTIVE,INACTIVE',
+            'id'       => 'required|exists:admins,id'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'statusCode'=>'400',
+                'message' => $validator->errors()->first(),
+                'data'=>null
+            ], 400);
+        }
+
+
+        // ✅ Get validated data
+        $validated = $validator->validated();
+
+        // ✅ Map form fields to DB fields
+        $admin = Admin::find($validated['id']);
+
+        $admin->update(['status'=>$validated['status']]);
+
+        return response()->json([
+            'statusCode'=>'200',
+            'message' => 'Admin saved successfully',
+            'data'    => $admin
+        ], 200);
     }
 }

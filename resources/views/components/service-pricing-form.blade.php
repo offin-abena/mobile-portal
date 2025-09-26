@@ -1,7 +1,7 @@
-<form role="form" method="post">
+<form id="frm_create_service" role="form" method="post" action="{{ route('services.index') }}">
     <div class="card card-success card-outline">
         <div class="card-header">
-            <h3 class="card-title">Add New System Account</h3>
+            <h3 class="card-title">Add New/Update System Account</h3>
         </div>
         <div class="card-body">
             @csrf
@@ -9,7 +9,7 @@
             <div class="form-group mb-2">
                 <label for="countryCode">Country Code</label>
                 <select id="countryCode" class="form-control" name="countryCode" required>
-                    <option value="gh">GH</option>
+                    <option value="GH">GH</option>
                     <!--
                     <option value="us">US</option>
                     <option value="gb">GB</option>
@@ -55,7 +55,7 @@
 
         </div>
         <div class="card-footer">
-            <button type="submit" class="btn-block btn btn-primary" name="add-service">Add New Service</button>
+            <button type="submit" class="btn-block btn btn-primary" name="add-service">Save Service</button>
         </div>
     </div>
 </form>

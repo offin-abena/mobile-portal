@@ -60,7 +60,6 @@ class MeterTransactionsController extends Controller
 
             $resp=$response->json();
 
-            //dd($resp);
 
             $totalRecords = $resp['limit'];
             $filteredRecords = count($resp['rows']) ?? $totalRecords;

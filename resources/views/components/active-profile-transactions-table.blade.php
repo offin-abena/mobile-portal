@@ -6,7 +6,7 @@
     <!-- Card Body -->
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered" id="customer-report">
+            <table class="table table-striped table-bordered" id="customer-transactions-report">
                 <thead class="bg-success text-white">
                     <tr>
                         <th>Trnx Date</th>

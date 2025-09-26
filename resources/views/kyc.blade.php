@@ -30,14 +30,51 @@
         $('#kyc-limits').DataTable({
             "pageLength": 10,      // show 10 rows per page
             "ordering": true,      // enable column sorting
-            "searching": true,     // enable search box
+            "searching": true, // enable search box
+            "processing": true,
+            "serverSide": true,// enable search box
             "order": [[0, "desc"]], // default sort by "Time" column
             "language": {
                 "search": "_INPUT_",
                 "searchPlaceholder": "Search kyc details..."
             },
+           "ajax": {
+                    "url": "{{ route('api.kycs.index') }}", // 🔥 your backend endpoint here
+                    "type": "GET", // or POST if your API expects it
+                    "dataSrc": "data" // adjust based on your API JSON structure
+                },
+             responsive: true,
+                lengthMenu: [10, 100, 200, 500, 1000, 2000],
+                dom: 'Bfrltip',
+            "columns": [
+                    {
+                        data: "id",
+                        title: "ID"
+                    },
+                    {
+                        data: "name",
+                        title: "KYC Type"
+                    },
+                    {
+                        data: "transaction_limit",
+                        title: "Transaction Limit",
+                        //className: 'dt-nowrap'
+                    },
+                    {
+                        data: "dailyAmount",
+                        title: "Daily Limit",
+                        //className: 'dt-nowrap'
+                    },
+                    {
+                        data: "monthlyAmount",
+                        title: "Monthly Limit",
+                        //className: 'dt-nowrap'
+                    }
+
+
+                ],
             responsive: true,
-            dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
+            lengthMenu: [10, 100, 200, 500, 1000, 2000],
             buttons: [
             {
                 extend: 'copy',

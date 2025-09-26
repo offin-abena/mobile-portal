@@ -38,7 +38,7 @@ class AdminFactory extends Factory
                 'VMANAGER','ACCOUNTANT','COMPLIANCE','FRONTDESK'
             ]),
             'userPIN'     => $this->faker->numberBetween(1000, 999999),
-            'adminID'     => $this->faker->randomNumber(),
+            'adminID'     => Admin::query()?->inRandomOrder()?->value('id')??null,
             'userCountry' => $this->faker->countryCode(),
             'status'      => $this->faker->randomElement(['ACTIVE','INACTIVE']),
             'phoneNum'    => $this->faker->unique()->phoneNumber(),

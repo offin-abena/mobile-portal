@@ -27,40 +27,116 @@
 <script>
  $(document).ready(function () {
         $('#customer-report').DataTable({
-            "pageLength": 10,      // show 10 rows per page
-            "ordering": true,      // enable column sorting
-            "searching": true,     // enable search box
-            "order": [[0, "desc"]], // default sort by "Time" column
-            "language": {
-                "search": "_INPUT_",
-                "searchPlaceholder": "Search report..."
-            },
-            responsive: true,
-            dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
-            buttons: [
-            {
-                extend: 'copy',
-                className: 'btn btn-secondary'
-            },
-            {
-                extend: 'csv',
-                className: 'btn btn-success'
-            },
-            {
-                extend: 'excel',
-                className: 'btn btn-success'
-            },
-            {
-                extend: 'pdf',
-                className: 'btn btn-danger'
-            },
-            {
-                extend: 'print',
-                className: 'btn btn-info'
-            }
-        ]
+            "processing": true,
+                "serverSide": true, // enables server-side processing
+                "ajax": {
+                    "url": "{{ route('api.customers.index') }}", // 🔥 your backend endpoint here
+                    "type": "GET", // or POST if your API expects it
+                    "dataSrc": "data" ,// adjust based on your API JSON structure,
+                    data: function (d) {
+                        // Add your extra params here
+                        d.d_from = $('#d_from').val();
+                        d.d_to = $('#d_to').val();
+                    }
+                },
+                "pageLength": 10,
+                "ordering": true,
+                "searching": true,
+                "order": [
+                    [0, "desc"]
+                ],
+
+                "language": {
+                    "search": "_INPUT_",
+                    "searchPlaceholder": "Search admins list..."
+                },
+                responsive: true,
+                lengthMenu: [10, 100, 200,500,1000,2000],
+                dom: 'Bfrltip',
+                "columns": [
+                    //{ data: "id", title: "ID" },
+                    {
+                        data: "created_at",
+                        title: "Time"
+                    },
+                    {
+                        data: "birthCountry",
+                        title: "Country"
+                    },
+                    {
+                        data: "phoneNum",
+                        title: "Phone"
+                    },
+                    {
+                        data: "fullName",
+                        title: "Full Name"
+                    },
+                    {
+                        data: "gender",
+                        title: "Gender"
+                    },
+                    {
+                        data: "postcode",
+                        title: "GP-GPS Code"
+                    },
+                    {
+                        data: "addressLine1",
+                        title: "Address"
+                    },
+                    {
+                        data: "dob",
+                        title: "Date of Birth"
+                    },
+                    {
+                        data: "addressLine1",
+                        title: "District"
+                    },
+                    {
+                        data: "region",
+                        title: "Region"
+                    },
+                    {
+                        data: "birthCountry",
+                        title: "Country"
+                    },
+                    {
+                        data: "idNumber",
+                        title: "ID Number"
+                    },
+                    {
+                        data: "status",
+                        title: "Status"
+                    },
+
+                ],
+                buttons: [{
+                        extend: 'copy',
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'csv',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'btn btn-danger'
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-info'
+                    }
+                ]
 
         });
+
+        $('#frmGenerateReport').submit(function(evt){
+             evt.preventDefault();
+             $('#customer-report').DataTable().ajax.reload()
+        })
     });
 </script>
 @endsection
@@ -69,7 +145,7 @@
   <div class="col-md-12">
     <div class="card card-success card-outline">
       <div class="card-body">
-        <form role="form" method="post">
+        <form id="frmGenerateReport" role="form" method="post" action="#">
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">

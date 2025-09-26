@@ -35,4 +35,13 @@ class CustomerAccount extends Model
     public $incrementing = false;
 
     protected $keyType = 'string';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = \Str::uuid();
+        });
+    }
 }

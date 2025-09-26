@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Customer;
 
 class CustomersController extends Controller
 {
@@ -33,6 +34,12 @@ class CustomersController extends Controller
 
     public function active_customers(){
         return view('active-customers');
+    }
+
+    public function profile($profile){
+
+
+        return view('customer-profile',compact('profile'));
     }
     /**
      * Show the form for creating a new resource.

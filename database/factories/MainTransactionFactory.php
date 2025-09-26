@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Maintransaction;
+use App\Models\Customer;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MainTransaction>
@@ -21,6 +22,8 @@ class MainTransactionFactory extends Factory
      */
     public function definition(): array
     {
+        $sender=Customer::inRandomOrder()->first();
+        $recipient=Customer::inRandomOrder()->first();
         return [
             'id' => Str::uuid(), // varchar(100), primary key style
             'created_at' => now(),
@@ -30,14 +33,13 @@ class MainTransactionFactory extends Factory
             'transaction_uid' => strtoupper(Str::random(20)),
             'link_reference' => strtoupper(Str::random(10)),
             'transactionStatus' => $this->faker->randomElement([
-                'PROCESSING','CANCELLED','COMPLETED','WAITING',
-                'REVERSAL','REFUND','PENDING','FAILED'
+                 'PROCESSING','CANCELLED','COMPLETED','WAITING','REVERSAL','REFUND','PENDING','FAILED'
             ]),
 
-            'senderID' => Str::random(10),
-            'recipientID' => Str::random(10),
-            'senderCountryCode' => $this->faker->countryCode(),
-            'recipientCountryCode' => $this->faker->countryCode(),
+            'senderID' => $sender->id??null,
+            'recipientID' =>$recipient->id??null,
+            'senderCountryCode' => $sender->countryCode,
+            'recipientCountryCode' =>$recipient->countryCode,
 
             'sendersAmount' => $this->faker->randomFloat(2, 10, 10000),
             'recipientAmount' => $this->faker->randomFloat(2, 10, 10000),

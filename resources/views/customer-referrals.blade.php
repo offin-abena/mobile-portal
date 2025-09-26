@@ -29,8 +29,10 @@
         $(document).ready(function() {
             $('#customer-list-referred').DataTable({
                 "pageLength": 10, // show 10 rows per page
-                "ordering": true, // enable column sorting
+                 "ordering": true, // enable column sorting
                 "searching": true, // enable search box
+                "processing": true,
+                "serverSide": true,
                 "order": [
                     [0, "desc"]
                 ], // default sort by "Time" column
@@ -38,8 +40,24 @@
                     "search": "_INPUT_",
                     "searchPlaceholder": "Search referred customers..."
                 },
+                 "ajax": {
+                    "url": "{{ route('api.customers.referred') }}",
+                    "type": "GET",
+                    "dataSrc": "data"
+                },
                 responsive: true,
-                dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
+                lengthMenu: [10, 100, 200, 500, 1000, 2000],
+                dom: 'Bfrltip',
+                 "columns": [
+                        { data: "created_at", title: "Date" },
+                        { data: "full_name", title: "Full Name" },
+                        { data: "phone_num", title: "Contact/ID" },
+                        { data: "district", title: "District" },
+                        { data: "region", title: "Region" },
+                        { data: "region", title: "Referred By" },
+                        { data: "status", title: "Status" }
+
+                    ],
                 buttons: [{
                         extend: 'copy',
                         className: 'btn btn-secondary'

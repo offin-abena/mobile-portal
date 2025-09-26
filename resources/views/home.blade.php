@@ -2,6 +2,7 @@
 @section('title', 'Dashboard')
 @section('content')
 @section('scripts')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <!-- sortablejs -->
     <script
       src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
@@ -192,6 +193,138 @@
       const sparkline3 = new ApexCharts(document.querySelector('#sparkline-3'), option_sparkline3);
       sparkline3.render();
     </script>
+    <script defer>
+  document.addEventListener("DOMContentLoaded", function () {
+    function formatDate(date) {
+      return date.toISOString().split('T')[0];
+    }
+
+    const today = new Date();
+    const lastWeek = new Date();
+    lastWeek.setDate(today.getDate() - 7);
+
+    document.getElementById("dateFrom").value = formatDate(lastWeek);
+    document.getElementById("dateTo").value = formatDate(today);
+
+    // Optional: prevent selecting future dates
+    document.getElementById("dateTo").setAttribute("max", formatDate(today));
+  });
+</script>
+<script>
+    function loadDashboard(from, to) {
+    // Fix URL construction - use template literals or proper concatenation
+    const url = `/api/dashboard/${from}/${to}/summaries`;
+    console.log('Url', url);
+
+    $.post(url, {_token: $('input[name="_token"]').val()})
+        .done(function(data) {
+            // Use nullish coalescing operator (??) instead of bitwise OR (|)
+            const totalonlineCount = data.data.totalOnlineCount ?? 0;
+            const totalonlineAmount = data.data.totalOnlineAmount ?? 0;
+
+            $('#prepaid-online-count').text(`${totalonlineCount}`);
+            $('#prepaid-online-amount').text(`GHS ${totalonlineAmount}`);
+
+            const totalOfflineCount = data.data.totalOfflineCount ?? 0;
+            const totalOfflineAmount = data.data.totalOfflineAmount ?? 0;
+
+            $('#prepaid-offline-count').text(`${totalOfflineCount}`);
+            $('#prepaid-offline-amount').text(`GHS ${totalOfflineAmount}`);
+
+            const totalPostpaidCount = data.data.totalPostpaidCount ?? 0;
+            const totalPostpaidAmount = data.data.totalPostpaidAmount ?? 0;
+
+            $('#postpaid-count').text(`${totalPostpaidCount}`);
+            $('#postpaid-amount').text(`GHS ${totalPostpaidAmount}`);
+
+            const totalAirtimeCount = data.data.totalAirtimeCount ?? 0;
+            const totalAirtimeAmount = data.data.totalAirtimeAmount ?? 0;
+
+            $('#airtime-count').text(totalAirtimeCount);
+            $('#airtime-amount').text(`GHS ${totalAirtimeAmount}`);
+
+            const totalBankCount = data.data.totalBankCount ?? 0;
+            const totalBankAmount = data.data.totalBankAmount ?? 0;
+
+            $('#bank-count').text(totalBankCount);
+            $('#bank-amount').text(`GHS ${totalBankAmount}`);
+
+            const totalMomoCount = data.data.totalMomoCount ?? 0;
+            const totalMomoAmount = data.data.totalMomoAmount ?? 0;
+
+            $('#momo-count').text(totalMomoCount);
+            $('#momo-amount').text(`GHS ${totalMomoAmount}`);
+
+            // Calculate totals
+            const totalCount = totalonlineCount + totalOfflineCount + totalPostpaidCount +
+                             totalAirtimeCount + totalBankCount + totalMomoCount;
+            const totalAmount = Number(totalonlineAmount + totalOfflineAmount + totalPostpaidAmount+ totalAirtimeAmount + totalBankAmount + totalMomoAmount);
+
+            $('#payment-count').text(totalCount);
+            $('#payment-amount').text(`GHS ${totalAmount}`);
+
+            // Fix duplicate addition in total_transactions calculation
+            const total_transactions = totalAmount; // This was adding bank and momo twice
+
+            const total_revenue = (5/100) * total_transactions;
+
+            $('#all-transactions').text(`GHS ${total_transactions}`);
+            $('#total-revenue').text(`GHS ${total_revenue.toFixed(2)}`); // Add decimal formatting
+        })
+        .fail(function(xhr, status, error) {
+            $('.alert-dismissible').hide();
+
+            let errorHtml = '<div class="alert alert-danger"><ul>';
+
+            if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                // Laravel validation error
+                $.each(xhr.responseJSON.errors, function(key, value) {
+                    errorHtml += '<li>' + value[0] + '</li>';
+                });
+            } else if (xhr.status === 400) {
+                // Bad request
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorHtml += '<li>' + xhr.responseJSON.message + '</li>';
+                } else {
+                    errorHtml += '<li>Bad request. Please check your input.</li>';
+                }
+            } else {
+                // General / server error
+                errorHtml += '<li>An unexpected error occurred. Please try again later.</li>';
+            }
+
+            errorHtml += '</ul></div>';
+            $('#alertWarning').html(errorHtml).show();
+        });
+}
+
+
+    $(document).ready(function(){
+        $('#goBtn').trigger('click')
+    })
+</script>
+<script>
+  const goBtn = document.getElementById("goBtn");
+  const spinner = goBtn.querySelector(".spinner");
+
+  goBtn.addEventListener("click", function () {
+    // Show spinner
+    spinner.classList.remove("d-none");
+    goBtn.setAttribute("data-loading", "true");
+
+    // Simulate a process
+    setTimeout(() => {
+      spinner.classList.add("d-none");
+      goBtn.removeAttribute("data-loading");
+
+       //evt.preventDefault();
+            dateFrom=$('#dateFrom').val()
+            dateTo=$('#dateTo').val()
+
+            loadDashboard(dateFrom,dateTo)
+    }, 3000); // 3s fake load
+  });
+</script>
 @endsection
 @include('components.dashboard-widgets')
 @endsection

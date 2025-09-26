@@ -1,23 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\UGroup;
-use App\Models\AccountType;
-use App\Models\Service;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
-class PricingController extends Controller
+class ServicesController extends Controller
 {
-   
-
-    public function main(Request $request)
+    public function index(Request $request)
     {
-        $groups=UGroup::orderBy('groupName')->get();
-        $accountTypes=AccountType::orderBy('accountType')->get();
-        $services=Service::orderBy('general_service')->get();
-
         $payload=[];
         if ($request->isMethod('post')) {
 
@@ -57,7 +47,6 @@ class PricingController extends Controller
                     return redirect()->back()->with('warning', $response->json('message') ?? 'Pricing creation failed!');
                 }
         }
-
-        return view('main-pricing',compact('groups','accountTypes','services'));
+        return view('service-pricing');
     }
 }

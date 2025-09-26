@@ -27,19 +27,77 @@
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#customer-list').DataTable({
+           const table=$('#customer-list').DataTable({
                 "pageLength": 10, // show 10 rows per page
-                "ordering": true, // enable column sorting
-                "searching": true, // enable search box
+                "ordering": true,      // enable column sorting
+            "searching": true, // enable search box
+            "processing": true,
+            "serverSide": true,
                 "order": [
                     [0, "desc"]
                 ], // default sort by "Time" column
                 "language": {
                     "search": "_INPUT_",
-                    "searchPlaceholder": "Search vendors..."
+                    "searchPlaceholder": "Search customers..."
+                },
+                "ordering": true, // enable column sorting
+                "searching": true, // enable search box
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{{ route('api.customers.top-selling') }}",
+                    "type": "GET",
+                    "dataSrc": "data"
                 },
                 responsive: true,
-                dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
+                lengthMenu: [10, 100, 200, 500, 1000, 2000],
+                "columns": [{
+                        data: "created_at",
+                        title: "Time"
+                    },
+                    {
+                        data: "country",
+                        title: "Country"
+                    },
+                    {
+                        data: "phoneNum",
+                        title: "Phone"
+                    },
+                    {
+                        data: "fullName",
+                        title: "Name"
+                    },
+                    {
+                        data: "gender",
+                        title: "Gender"
+                    },
+                    {
+                        data: "postcode",
+                        title: "GP-GPS Code"
+                    },
+                    {
+                        data: "addressline1",
+                        title: "Address"
+                    },
+                    {
+                        data: "totalAmount",
+                        title: "Total Purchase"
+                    },
+                    {
+                        data: "numTransactions",
+                        title: "Transaction #"
+                    },
+                     {
+                        data: null,
+                        render: function(data, type, row) {
+                            return '<button class="btn btn-sm btn-success view-btn">View Details</button>';
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+
+                ],
+                dom: 'Bfrltip',
                 buttons: [{
                         extend: 'copy',
                         className: 'btn btn-secondary'
@@ -63,23 +121,33 @@
                 ]
 
             });
+
+            $('#customer-list').on('click', '.view-btn', function() {
+                let rowData = table.row($(this).parents('tr')).data();
+
+                console.log('Customer data',rowData)
+
+                setTimeout(() => {
+                    location.href = `/customers/${rowData.senderID}/transactions`;
+                }, 300);
+            });
         });
     </script>
 @endsection
 @section('content')
 
-		<div class="row">
-            <div class="col-md-12">
-               <div class="card card-success card-outline shadow-sm">
-                        <!-- List of All Payout -->
-                        <div class="card-header" style="color:red">This is a list of All Top Selling Customers</div>
-                        <div class="card-body">
-                             <div class="table-responsive">
-                            <table class="table table-striped" id="customer-list">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-success card-outline shadow-sm">
+                <!-- List of All Payout -->
+                <div class="card-header" style="color:red">This is a list of All Top Selling Customers</div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="customer-list">
 
-                                <thead>
+                            <thead>
                                 <tr>
-                                     <th>Time</th>
+                                    {{-- <th>Time</th>
                                     <th>Country</th>
                                     <th>Phone</th>
                                     <th>Name</th>
@@ -87,18 +155,18 @@
                                     <th>GP-GPS Code</th>
                                     <th>Address</th>
                                     <th>Status</th>
-                                    <th>Total Purchases</th>
-									<th>Transactions #</th>
-									<th>Customer Details</th>
+                                    <th>Total Purchases</th> --}}
+                                    {{-- <th>Transactions #</th> --}}
+                                    {{-- <th>Customer Details</th> --}}
                                 </tr>
-                                </thead>
-                            </table>
-                             </div>
-                            <hr>
-                        </div>
+                            </thead>
+                        </table>
                     </div>
+                    <hr>
+                </div>
             </div>
         </div>
+    </div>
     </section>
     <!-- /.content -->
-    @endsection
+@endsection

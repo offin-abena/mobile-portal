@@ -13,6 +13,8 @@ class UGroup extends Eloquent
         'groupName',
         'added_by',
         'dateTime',
+        'created_at',
+        'updated_at'
    ];
 
 }

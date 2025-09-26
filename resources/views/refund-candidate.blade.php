@@ -31,13 +31,115 @@
             "pageLength": 10,      // show 10 rows per page
             "ordering": true,      // enable column sorting
             "searching": true,     // enable search box
+            "serverSide": true,
             "order": [[0, "desc"]], // default sort by "Time" column
             "language": {
                 "search": "_INPUT_",
                 "searchPlaceholder": "Search transactions..."
             },
+           "ajax": {
+                "url": "{{ route('api.transactions.refundCandidates') }}", // 🔥 your backend endpoint here
+                "type": "GET", // or POST if your API expects it
+                "dataSrc": "data" // adjust based on your API JSON structure
+            },
             responsive: true,
-            dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
+           lengthMenu: [10, 100, 200, 500, 1000, 2000],
+                dom: 'Bfrltip',
+            "columns": [
+                    //{ data: "id", title: "ID" },
+                    {
+                        data: "created_at",
+                        title: "Trnx Date"
+                    },
+                    {
+                        data: "customer",
+                        title: "Sender"
+                    },
+                    {
+                        data: "b_bus_id",
+                        title: "B-Bus Fulfiment ID",
+                        className: 'dt-nowrap'
+                    },
+                    {
+                        data: "transaction_uid",
+                        title: "Transaction ID"
+                    },
+                    {
+                        data: "transaction_type",
+                        title: "Trnx Type",
+                         className: 'dt-nowrap'
+                    },
+                    {
+                        data: "transactionStatus",
+                        title: "Status"
+                    },
+                    {
+                        data: "purpose",
+                        title: "Purpose"
+                    },
+                    {
+                        data: "sendersAmount",
+                        title: "Amount"
+                    },
+                    {
+                        data: "fee",
+                        title: "Fee"
+                    },
+                    {
+                        data: "billCode",
+                        title: "Bill Reference"
+                    },
+
+                    {
+                        data: "bill_type",
+                        title: "Bill Type"
+                    },
+
+                    {
+                        data: "remitRecipientMomoName",
+                        title: "MoMo Name",
+                        className: "dt-nowrap"
+                    },
+                    {
+                        data: "airtimeNumber",
+                        title: "Airtime Number",
+                         className: "dt-nowrap"
+                    },
+                    {
+                        data: "remitRecipientBankName",
+                        title: "Bank Name"
+                    },
+                    {
+                        data: "remitRecipientBankAccount",
+                        title: "Bank Account #"
+                    },
+                     {
+                        data: "remitRecipientBankAccountName",
+                        title: "Bank Account Name",
+                         className: "dt-nowrap"
+                    },
+                    {
+                        data: "b_bus_collection_id",
+                        title: "B-Bu Collection ID"
+                    },
+                    {
+                        data: "async_id",
+                        title: "Async ID"
+                    },
+                    {
+                        data: "app_version",
+                        title: "App Version"
+                    }
+                    // {
+                    //     data: "remitRecipientBankAccountName",
+                    //     title: "Bank Account Name"
+                    // },
+                    // {
+                    //     data: "remitRecipientBankAccountName",
+                    //     title: "Bank Account Name"
+                    // },
+
+                ],
             buttons: [
             {
                 extend: 'copy',

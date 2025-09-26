@@ -10,16 +10,11 @@ class UserEcgMterFactory extends Factory
 {
     protected $model = UserEcgMter::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
 
     public function definition(): array
     {
         return [
-             'user_id'    => User::inRandomOrder()?->first()?->id ,
+             'user_id'    =>User::inRandomOrder()?->first()?->id ,
              'meter_no'   => strtoupper($this->faker->bothify('MTR###??')),
              'meter_info' => $this->faker->paragraphs(2, true), // sample JSON or text
              'status'     => $this->faker->randomElement(['ACTIVE', 'INACTIVE']),

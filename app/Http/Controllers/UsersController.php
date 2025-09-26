@@ -46,8 +46,6 @@ class UsersController extends Controller
                     'password'=>$request->password,
                 ]);
 
-
-
                 if($response->successful()){
                     $payload=$response->json();
 

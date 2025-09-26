@@ -33,6 +33,8 @@ Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])
     ->name('logout')->middleware('auth');
 
+Route::get('customers/{profile}/transactions', [App\Http\Controllers\CustomersController::class,'profile'])
+    ->middleware('auth')->name('customers.transactions');
 
 Route::get('customers/active-customers', [App\Http\Controllers\CustomersController::class,'active_customers'])
     ->middleware('auth')->name('customers.active_customers');
@@ -45,6 +47,8 @@ Route::get('customers/top-selling', [App\Http\Controllers\CustomersController::c
 
 Route::get('customers/partial-onboardings', [App\Http\Controllers\CustomersController::class,'partial_onboarding'])
     ->middleware('auth')->name('customers.partial_onboarding');
+
+
 
 Route::get('customers/referrals', [App\Http\Controllers\CustomersController::class,'referrals'])
     ->middleware('auth')->name('customers.referrals');
@@ -118,10 +122,10 @@ Route::resource('vendors', App\Http\Controllers\VendorsController::class)
 Route::get('sms/quick-send', [App\Http\Controllers\SmsController::class,'quickSend'])
     ->middleware('auth')->name('sms.quick-send');
 
-Route::get('prices/services', [App\Http\Controllers\PricingController::class,'servicePrincing'])
-    ->middleware('auth')->name('prices.services');
+Route::match(['get','post'],'services', [App\Http\Controllers\ServicesController::class,'index'])
+    ->middleware('auth')->name('services.index');
 
-Route::get('prices/main', [App\Http\Controllers\PricingController::class,'main'])
+Route::match(['get','post'],'prices/main', [App\Http\Controllers\PricingController::class,'main'])
     ->middleware('auth')->name('prices.main');
 
 Route::resource('currencies', App\Http\Controllers\CurrenciesController::class)
@@ -162,6 +166,11 @@ Route::resource('forensics', App\Http\Controllers\ForensicsController::class)
 
 //====== API Routes ======//
 Route::prefix('api')->middleware('auth')->group(function () {
+
+    Route::post('services', [App\Http\Controllers\Apis\ServicesController::class,'create'])->name('api.services.create');
+
+    Route::get('services',[App\Http\Controllers\Apis\ServicesController::class, 'index'])->name('api.services.index');
+
     Route::get('tsa-mgt',[App\Http\Controllers\Apis\TsaController::class, 'index'])->name('api.tsa.index');
     Route::get('meters/transactions',[App\Http\Controllers\Apis\MeterTransactionsController::class, 'index'])->name('api.meters.transactions');
     Route::get('meters',[App\Http\Controllers\Apis\MetersController::class, 'index'])->name('api.meters.index');
@@ -170,14 +179,39 @@ Route::prefix('api')->middleware('auth')->group(function () {
     Route::get('vendors',[App\Http\Controllers\Apis\VendorsController::class, 'vendorDatabase'])->name('api.vendors.index');
 
     Route::get('transactions/refunded',[App\Http\Controllers\Apis\TransactionsController::class, 'refundedTransactions'])->name('api.transactions.refunded');
+    Route::get('transactions/refundcandidates',[App\Http\Controllers\Apis\TransactionsController::class, 'refundCandidates'])->name('api.transactions.refundCandidates');
+
     Route::get('transactions/failed-to-write',[App\Http\Controllers\Apis\TransactionsController::class, 'failedToWrite'])->name('api.transactions.failedToWrite');
     Route::match(['get','post'],'transactions',[App\Http\Controllers\Apis\TransactionsController::class, 'index'])->name('api.transactions.index');
 
-    Route::get('customers/referred',[App\Http\Controllers\Apis\CustomersController::class, 'referred'])->name('api.customers.referred');
-    Route::get('customers',[App\Http\Controllers\Apis\CustomersController::class, 'index'])->name('api.customers.index');
-
     Route::get('users/audit-trail',[App\Http\Controllers\Apis\UsersController::class, 'audit_trail'])->name('api.users.audit_trail');
     Route::get('users/admins',[App\Http\Controllers\Apis\UsersController::class, 'admins'])->name('api.users.admins');
+    Route::post('users/admins/change-status',[App\Http\Controllers\Apis\UsersController::class, 'change_status_admin'])->name('api.users.admins.status.change');
 
+    Route::get('customers/active-transactions',[App\Http\Controllers\Apis\CustomersController::class, 'active_customers'])->name('api.customers.active.transactions');
+    
+    Route::get('customers/referred',[App\Http\Controllers\Apis\CustomersController::class, 'referred'])->name('api.customers.referred');
+    Route::get('customers/top-selling',[App\Http\Controllers\Apis\CustomersController::class, 'top_selling_cutomers'])->name('api.customers.top-selling');
+    Route::post('customers/{profile}/profiles',[App\Http\Controllers\Apis\CustomersController::class, 'profile'])->name('api.customers.profile');
+
+    Route::put('customers/{profile}/profiles',[App\Http\Controllers\Apis\CustomersController::class, 'update_customer'])->name('api.customers.profile.update');
+
+    Route::get('customers',[App\Http\Controllers\Apis\CustomersController::class, 'index'])->name('api.customers.index');
+
+    Route::get('customers/system_accounts',[App\Http\Controllers\Apis\CustomersController::class, 'system_accounts'])->name('api.system.accounts');
+    Route::post('customers/system_accounts',[App\Http\Controllers\Apis\CustomersController::class, 'create_system_account'])->name('api.system.account.create');
+
+
+    Route::post('prices/create',[App\Http\Controllers\Apis\PricingPoliciesController::class, 'create'])->name('api.prices.create');
     Route::get('prices',[App\Http\Controllers\Apis\PricingPoliciesController::class, 'index'])->name('api.prices.index');
+    Route::get('prices/{price}',[App\Http\Controllers\Apis\PricingPoliciesController::class, 'show'])->name('api.prices.show');
+
+    Route::get('currencies',[App\Http\Controllers\Apis\CurrencyController::class, 'index'])->name('api.currencies.index');
+    Route::post('currencies',[App\Http\Controllers\Apis\CurrencyController::class, 'create'])->name('api.currencies.create');
+
+    Route::get('settings',[App\Http\Controllers\Apis\SystemSettingController::class, 'index'])->name('api.settings.index');
+    Route::post('settings',[App\Http\Controllers\Apis\SystemSettingController::class, 'toggle_status'])->name('api.settings.toggle_status');
+
+    Route::get('kycs',[App\Http\Controllers\Apis\kycsController::class, 'index'])->name('api.kycs.index');
+    Route::post('dashboard/{from}/{to}/summaries',[App\Http\Controllers\Apis\DashboardController::class, 'get_special_transactions_summary'])->name('api.dashboard.summaries');
 });

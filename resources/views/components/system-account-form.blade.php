@@ -1,7 +1,7 @@
- <form role="form" method="post">
+ <form id="frm_admin_user" role="form" method="post" action="#">
      <div class="card card-success card-outline">
          <div class="card-header">
-             <h3 class="card-title">Add New System Account</h3>
+             <h3 class="card-title">Add New/Update System Account</h3>
          </div>
          <div class="card-body">
              @csrf
@@ -11,11 +11,11 @@
              </div>
              <div class="form-group mb-2">
                  <label for="password">Password</label>
-                 <input type="password" name="password" required class="form-control" id="password" >
+                 <input type="password" name="password" class="form-control" id="password" >
              </div>
              <div class="form-group mb-2">
                  <label for="c_password">Confirm Password</label>
-                                <input type="password" name="password_confirmation" required class="form-control" id="c_password" >
+                                <input type="password" name="password_confirmation" class="form-control" id="c_password" >
              </div>
              <div class="form-group mb-2">
                   <label for="fullName">Full Name</label>
@@ -33,15 +33,14 @@
                 <label for="country">Country</label>
                                 <select class="form-control" id="country" name="country" required>
                                     <option value="">Select Country</option>
-                                    <option value="gh">Ghana</option>
-
+                                    <option value="GH">Ghana</option>
                                 </select>
              </div>
 
          </div>
 
          <div class="card-footer">
-             <button type="submit" class="btn btn-success" name="add_superAgent">Add System Account</button>
+             <button type="submit" class="btn btn-success" name="add_superAgent">Save Account</button>
          </div>
      </div>
  </form>

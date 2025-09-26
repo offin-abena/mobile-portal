@@ -3,11 +3,11 @@
 @section('title', 'Dashboard For Brassica Capita')
 @section('content')
 <section class="content">
-            <div class="row">
+ <div class="row">
     <div class="col-md-8">
         <canvas id="ctx_daily_reg_capita"></canvas>
     </div>
-</div>
+ </div>
 
 <div class="row">
     <div class="col-md-3">
@@ -71,4 +71,7 @@
     </div>
 </div>
 
+@endsection
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 @endsection

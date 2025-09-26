@@ -23,6 +23,7 @@
                                 <th>recipientCountry</th>
                                 <th>sysCommission</th>
                                 <th>senderCommission</th>
+                                <th>Action</th>
                                 {{-- <th>recipientCommission</th>
                                 <th>Edit</th> --}}
                     </tr>

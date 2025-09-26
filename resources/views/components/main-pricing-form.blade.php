@@ -1,7 +1,7 @@
-<form role="form" method="post">
+<form id="frm_create_policy" role="form" method="post" action="{{ route('prices.main') }}">
     <div class="card card-success card-outline">
         <div class="card-header">
-            <h3 class="card-title">Add New Pricing Policy</h3>
+            <h3 class="card-title">Add/Update Pricing Policy</h3>
         </div>
         <div class="card-body">
             @csrf
@@ -10,7 +10,7 @@
                 <select id="senderGroup" class="form-control" name="senderGroup" required>
                     <option value="">Select Senders Group</option>
                     @foreach ($groups as $group)
-                        <option value="{{ $group->id }}">{{ $group->groupName }}</option>
+                        <option value={{ $group->id }}>{{ $group->groupName }}</option>
                     @endforeach
                 </select>
             </div>
@@ -19,7 +19,7 @@
                 <select id="recipientGroup" class="form-control" name="recipientGroup" required>
                     <option value="">Select Recipient Group</option>
                      @foreach ($groups as $group)
-                        <option value="{{ $group->id }}">{{ $group->groupName }}</option>
+                        <option value={{ $group->id }}>{{ $group->groupName }}</option>
                      @endforeach
                 </select>
             </div>
@@ -29,7 +29,7 @@
                 <select id="sendersAccountType" class="form-control" name="sendersAccountType" required>
                     <option value="">Select Sender Account Type</option>
                     @foreach ($accountTypes as $accountType)
-                        <option value="{{ $accountType->id }}">{{ $accountType->accountType }}</option>
+                        <option value={{ $accountType->id }}>{{ $accountType->accountType }}</option>
                     @endforeach
                 </select>
             </div>
@@ -39,7 +39,7 @@
                 <select id="recipientAccountType" class="form-control" name="recipientAccountType" required>
                     <option value="">Select Recipient Account Type</option>
                     @foreach ($accountTypes as $accountType)
-                        <option value="{{ $accountType->id }}">{{ $accountType->accountType }}</option>
+                        <option value={{ $accountType->id }}>{{ $accountType->accountType }}</option>
                     @endforeach
                 </select>
             </div>
@@ -47,7 +47,9 @@
                 <label for="serviceType">Service Type</label>
                 <select id="serviceType" class="form-control" name="serviceType" required>
                     <option value="">Select Service</option>
-                    <option value="<?=""?>"><?="Prepaid"?></option>
+                    @foreach ($services as $service)
+                        <option value={{ $service->id }}>{{ $service->general_service }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -69,13 +71,7 @@
                 <label for="senderCountry">Sender Country</label>
                 <select id="senderCountry" class="form-control" name="senderCountry" required>
                     <option value="">Select Country Code</option>
-                    <option value="gh">Ghana</option>
-                    <!--
-                    <option value="lr">Liberia USD</option>
-                    <option value="lr1">Liberia LRD</option>
-                    <option value="us">United States</option>
-                    <option value="ag">Antigua and Barbuda</option>
-                    -->
+                    <option value="GH">Ghana</option>
                 </select>
             </div>
 
@@ -83,12 +79,7 @@
                 <label for="recipientCountry">Recipient Country</label>
                 <select id="recipientCountry" class="form-control" name="recipientCountry" required>
                     <option value="">Select Country Code</option>
-                    <option value="gh">Ghana</option>
-                    <!--
-                    <option value="lr1">Liberia LRD</option>
-                    <option value="us">United States</option>
-                    <option value="ag">Antigua and Barbuda</option>
-                    -->
+                    <option value="GH">Ghana</option>
                 </select>
             </div>
 
@@ -109,7 +100,7 @@
 
         </div>
         <div class="card-footer">
-            <button type="submit" class="btn-block btn btn-primary" name="add-service">Add New Service</button>
+            <button type="submit" class="btn-block btn btn-primary" name="add-service">Save Changes</button>
         </div>
     </div>
 </form>
