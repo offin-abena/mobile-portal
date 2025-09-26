@@ -49,8 +49,10 @@ Route::get('customers/partial-onboardings', [App\Http\Controllers\CustomersContr
     ->middleware('auth')->name('customers.partial_onboarding');
 
 
+Route::get('referrers', [App\Http\Controllers\ReferrersController::class,'index'])
+    ->middleware('auth')->name('referrers.index');
 
-Route::get('customers/referrals', [App\Http\Controllers\CustomersController::class,'referrals'])
+Route::get('customers/referrals', [App\Http\Controllers\CustomersController::class,'index'])
     ->middleware('auth')->name('customers.referrals');
 
 Route::resource('customers', App\Http\Controllers\CustomersController::class)
@@ -214,4 +216,8 @@ Route::prefix('api')->middleware('auth')->group(function () {
 
     Route::get('kycs',[App\Http\Controllers\Apis\kycsController::class, 'index'])->name('api.kycs.index');
     Route::post('dashboard/{from}/{to}/summaries',[App\Http\Controllers\Apis\DashboardController::class, 'get_special_transactions_summary'])->name('api.dashboard.summaries');
+
+    Route::post('referrers/save/{referrer?}', [App\Http\Controllers\Apis\ReferrersController::class,'save'])->name('api.referrers.save');
+    
+    Route::get('referrers', [App\Http\Controllers\Apis\ReferrersController::class,'index'])->name('api.referrers.index');
 });

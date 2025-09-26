@@ -77,6 +77,24 @@
                         </form>
                     </div>
                 </div>
+                <!-- TGL Mobile Vendor Service -->
+                <div class="card card-success card-outline mb-3 shadow-sm">
+                    <div class="card-header">TGL Mobile Vendor</div>
+                    <div class="card-body">
+                        <form id="frmTglMobileVendor" class="d-flex align-items-center gap-3 flex-wrap" method="post">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="tgl_mobile_vendor_on" value="ON" <?php echo 'checked';?>>
+                                <label class="form-check-label" for="super_on">TURN ON</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="tgl_mobile_vendor_off" value="OFF" <?php echo 'checked';?>>
+                                <label class="form-check-label" for="super_off">TURN OFF</label>
+                            </div>
+                            <input type="hidden" value="SUPER" name="serviceType">
+                            <button  type="submit" class="btn btn-success btn-sm" name="save">SAVE</button>
+                        </form>
+                    </div>
+                </div>
             </div>
 
             <!-- Right Column -->
@@ -148,6 +166,25 @@
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="status" id="bank_transfer_off" value="OFF">
+                                <label class="form-check-label" for="super_off">TURN OFF</label>
+                            </div>
+                            <input type="hidden" value="SUPER" name="serviceType">
+                            <button  type="submit" class="btn btn-success btn-sm" name="save">SAVE</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- TGL Mobile Vendor Service -->
+                <div class="card card-success card-outline mb-3 shadow-sm">
+                    <div class="card-header">TGL Utility App</div>
+                    <div class="card-body">
+                        <form id="frmTglUtilityApp" class="d-flex align-items-center gap-3 flex-wrap" method="post">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="tgl_utility_app_on" value="ON" <?php echo 'checked';?>>
+                                <label class="form-check-label" for="super_on">TURN ON</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="tgl_utility_app_off" value="OFF" <?php echo 'checked';?>>
                                 <label class="form-check-label" for="super_off">TURN OFF</label>
                             </div>
                             <input type="hidden" value="SUPER" name="serviceType">
@@ -236,6 +273,24 @@
                 $('#momo_transfer_on').prop('checked', false).trigger('change')
                 $('#momo_transfer_off').prop('checked', true).trigger('change')
             }
+
+            if(res.data.allow_tgl_mobile_vendor_access){
+                $('#tgl_mobile_vendor_on').prop('checked', true).trigger('change')
+                $('#tgl_mobile_vendor_off').prop('checked', false).trigger('change')
+            }
+            else{
+                $('#tgl_mobile_vendor_on').prop('checked', false).trigger('change')
+                $('#tgl_mobile_vendor_off').prop('checked', true).trigger('change')
+            }
+
+            if(res.data.allow_tgl_utility_app_access){
+                $('#tgl_utility_app_on').prop('checked', true).trigger('change')
+                $('#tgl_utility_app_off').prop('checked', false).trigger('change')
+            }
+            else{
+                $('#tgl_utility_app_on').prop('checked', false).trigger('change')
+                $('#tgl_utility_app_off').prop('checked', true).trigger('change')
+            }
        })
 
        $('#frmUSSD').submit(function(evt){
@@ -281,6 +336,16 @@
        $('#frmBank').submit(function(evt){
             evt.preventDefault();
             toggleStatus($('#bank_transfer_on'),'bank_transfer');
+       })
+
+       $('#frmTglMobileVendor').submit(function(evt){
+            evt.preventDefault();
+            toggleStatus($('#tgl_mobile_vendor_on'),'tgl_mobile_vendor');
+       })
+
+       $('#frmTglUtilityApp').submit(function(evt){
+            evt.preventDefault();
+            toggleStatus($('#tgl_utility_app_on'),'tgl_utility_app');
        })
 
        function toggleStatus(selector,serviceTag){

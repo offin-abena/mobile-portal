@@ -24,7 +24,7 @@ class SystemSettingController extends Controller
      public function toggle_status(Request $request){
 
         $validator = Validator::make($request->all(), [
-             'service' => 'required|in:mobile,ussd,brassica,b_bus,bank_transfer,airtime_purchase,momo_transfer,legacy_quote',
+             'service' => 'required|in:mobile,ussd,brassica,b_bus,bank_transfer,airtime_purchase,momo_transfer,legacy_quote,tgl_mobile_vendor,tgl_utility_app',
              'state' => 'required|string|in:1,0'
         ]);
 

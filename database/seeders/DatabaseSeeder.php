@@ -20,6 +20,7 @@ use App\Models\UGroup;
 use App\Models\AccountType;
 use App\Models\Currency;
 use App\Models\Kyc;
+use App\Models\Referrer;
 
 class DatabaseSeeder extends Seeder
 {
@@ -48,6 +49,8 @@ class DatabaseSeeder extends Seeder
 
         //Currency::factory(4)->create();
         //Kyc::factory(4)->create();
+
+        Referrer::factory(100)->create();
 
     }
 }

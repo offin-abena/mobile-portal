@@ -203,8 +203,8 @@
       <p>Customer List</p>
     </a>
   </li>
-  <li class="nav-item {{ request()->routeIs('users.index') || request()->routeIs('audit-trails.index') ? 'menu-open' : '' }}">
-    <a href="#" class="nav-link {{ request()->routeIs('users.index') || request()->routeIs('audit-trails.index') ? 'active' : '' }}">
+  <li class="nav-item {{ request()->routeIs('users.index') || request()->routeIs('referrers.index') || request()->routeIs('audit-trails.index') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('users.index') || request()->routeIs('referrers.index') || request()->routeIs('audit-trails.index') ? 'active' : '' }}">
       <i class="fa fa-user"></i>
       <p>
         Users
@@ -222,6 +222,12 @@
         <a href="{{ route('audit-trails.index') }}" class="nav-link {{ request()->routeIs('audit-trails.index') ? 'active' : '' }}">
             <i class="nav-icon bi bi-circle"></i>
           <p>Audit Trail</p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('referrers.index') }}" class="nav-link {{ request()->routeIs('referrers.index') ? 'active' : '' }}">
+            <i class="nav-icon bi bi-circle"></i>
+          <p>Referrers</p>
         </a>
       </li>
     </ul>
