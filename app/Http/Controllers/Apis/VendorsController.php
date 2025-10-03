@@ -5,9 +5,15 @@ namespace App\Http\Controllers\Apis;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EcgNewData;
+use Illuminate\Support\Facades\Http;
+use App\Traits\LogsHttpErrors;
+
+
 
 class VendorsController extends Controller
 {
+    use LogsHttpErrors;
+
     public function search(Request $request){
         $vendors = EcgNewData::where('vendorName', 'like', '%' . $request->q . '%')
         ->orWhere('phoneNumber', 'like', '%' . $request->q . '%')
@@ -20,6 +26,99 @@ class VendorsController extends Controller
             'message' => 'Vendor search endpoint',
             'data' => $vendors,
         ]);
+
+    }
+
+    public function search_tgl_vendors(Request $request){
+
+        $url=config('tgl.ecollect_base_url');
+
+         $response = Http::withOptions(['verify' => false])->withHeaders([
+                    'Authorization' => 'ffee9eb7e0cf726525d316cf508094a81049ecd363c85a397a1919c8aa5fccea',
+                    'Content-Type' => 'application/json',
+                ])
+                ->post("{$url}/GetMerchants", [
+                    'terminalId' => '10000007',
+                    'asyncRequestId' => '6ed35554-14e5-46d8-b91a-bceddc0e7e9c'
+                ]);
+
+
+        if($response->successful()){
+
+            $payload=$response->json();
+
+
+            if($payload['status']['code']!='0'){
+                  return response()->json([
+                    'status' => 'failed',
+                    'message' => $payload['status']['message'],
+                    'data' => null,
+                ],404);
+            }
+
+
+            $merchants= $payload['merchants'];
+
+            //return $merchants;
+
+
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Vendor list',
+                'data' =>  $merchants,
+            ]);
+        }
+
+
+         return response()->json([
+                    'status' => 'error',
+                    'message' => 'No record found',
+                    'data' => null,
+                ],400);
+
+
+    }
+    public function branches(Request $request, $vendor){
+         $url=config('tgl.ecollect_base_url');
+
+         $response = Http::withOptions(['verify' => false])->withHeaders([
+                    'Authorization' => 'ffee9eb7e0cf726525d316cf508094a81049ecd363c85a397a1919c8aa5fccea',
+                    'Content-Type' => 'application/json',
+                ])
+                ->post("{$url}/GetMerchantSites", [
+                    'terminalId' => '10000007',
+                    'merchantId' => "{$vendor}",
+                    'asyncRequestId' => '6ed35554-14e5-46d8-b91a-bceddc0e7e9c'
+                ]);
+
+         if($response->successful()){
+
+            $payload=$response->json();
+
+
+            if($payload['status']['code']!='0'){
+                  return response()->json([
+                    'status' => 'failed',
+                    'message' => $payload['status']['message'],
+                    'data' => null,
+                ],404);
+            }
+
+            $sites= $payload['sites'];
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Sites list',
+                'data' => $sites,
+            ]);
+        }
+
+        return response()->json([
+                    'status' => 'error',
+                    'message' => 'No record found',
+                    'data' => null,
+                ],400);
 
     }
     public function vendorDatabase(Request $request){

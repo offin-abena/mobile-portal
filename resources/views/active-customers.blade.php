@@ -31,6 +31,8 @@
                 "pageLength": 10, // show 10 rows per page
                 "ordering": true, // enable column sorting
                 "searching": true, // enable search box
+                "processing": true,
+                "serverSide": true, // enables server-side processing
                 "order": [
                     [0, "desc"]
                 ],

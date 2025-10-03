@@ -9,7 +9,6 @@
             <table class="table table-striped align-middle" id="customer-list-referred">
                 <thead class="table-light">
                     <tr>
-                        <th>#</th>
                         <th>Date</th>
                         <th>Full Name</th>
                         <th>Contact/ID</th>

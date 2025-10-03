@@ -19,8 +19,13 @@
                 <div class="col-md-2 mb-2 mb-md-0">
                     <div class="form-group">
                         <label for="refund_btn">&nbsp;</label>
-                        <button type="submit" class="btn btn-success" style="width:100%"
-                            name="filtered_transactions">Generate Report</button>
+                        <button id="goBtn" type="button" class="btn btn-success" style="width:100%"
+                            name="filtered_transactions">
+                             <span class="spinner d-none me-2">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                            Generate Report
+                        </button>
                     </div>
                 </div>
             </div>

@@ -42,7 +42,7 @@ class ReferrersController extends Controller
 
         if (!empty($search)) {
             $query=$query->where(function ($q) use ($search) {
-                $q->where('fullName ', 'like', "%{$search}%")
+                $q->where('fullName', 'like', "%{$search}%")
                   ->orWhere('phone', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('gender', 'like', "%{$search}%")
@@ -135,6 +135,6 @@ class ReferrersController extends Controller
             'message' => 'Referrer saved successfully',
             'data'    => $referrer->refresh()
         ], 200);
-       
+
     }
 }

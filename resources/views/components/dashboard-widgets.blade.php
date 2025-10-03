@@ -29,7 +29,7 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <canvas id="ctx_daily_reg"></canvas>
+            <canvas id="ctx_daily_reg" height="100"></canvas>
         </div>
         <div class="col-md-6">
             <div class="row">

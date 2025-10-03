@@ -27,7 +27,7 @@
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#customer-list-referred').DataTable({
+           const table=$('#customer-list-referred').DataTable({
                 "pageLength": 10, // show 10 rows per page
                  "ordering": true, // enable column sorting
                 "searching": true, // enable search box
@@ -43,19 +43,34 @@
                  "ajax": {
                     "url": "{{ route('api.customers.referred') }}",
                     "type": "GET",
-                    "dataSrc": "data"
+                    "dataSrc": "data",
+                     data: function (d) {
+                        // Add your extra params here
+                        d.d_from = $('#d_from').val();
+                        d.d_to = $('#d_to').val();
+                    }
                 },
                 responsive: true,
                 lengthMenu: [10, 100, 200, 500, 1000, 2000],
                 dom: 'Bfrltip',
                  "columns": [
                         { data: "created_at", title: "Date" },
-                        { data: "full_name", title: "Full Name" },
-                        { data: "phone_num", title: "Contact/ID" },
-                        { data: "district", title: "District" },
+                        { data: "fullName", title: "Full Name" },
+                        { data: "phoneNum", title: "Contact/ID" },
                         { data: "region", title: "Region" },
-                        { data: "region", title: "Referred By" },
-                        { data: "status", title: "Status" }
+                        { data: "referrer", title: "Referred By" },
+                        { data: "status", title: "Status" },
+                        { data: "referral_code", title: "Referrer Code" },
+                        { data: "referral_link", title: "Referrer Link" },
+                        { data: "totalAmount", title: "Total Transactions" },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return '<button class="btn btn-sm btn-success view-btn">View Details</button>';
+                            },
+                            orderable: false,
+                            searchable: false
+                       }
 
                     ],
                 buttons: [{
@@ -81,8 +96,36 @@
                 ]
 
             });
+
+             $('#customer-list-referred').on('click', '.view-btn', function() {
+                let rowData = table.row($(this).parents('tr')).data();
+
+                console.log('Customer data',rowData)
+
+                setTimeout(() => {
+                    location.href = `/customers/${rowData.id}/transactions`;
+                }, 300);
+            });
         });
     </script>
+<script>
+  const goBtn = document.getElementById("goBtn");
+  const spinner = goBtn.querySelector(".spinner");
+
+  goBtn.addEventListener("click", function () {
+    // Show spinner
+    spinner.classList.remove("d-none");
+    goBtn.setAttribute("data-loading", "true");
+
+    // Simulate a process
+    setTimeout(() => {
+      spinner.classList.add("d-none");
+      goBtn.removeAttribute("data-loading");
+
+      $('#customer-list-referred').DataTable().ajax.reload();
+    }, 3000);
+  });
+</script>
 @endsection
 @section('content')
     <div class="content-wrapper">

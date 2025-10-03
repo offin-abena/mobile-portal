@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\CustomerTransactionSummary;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ViewMainTransaction;
+use App\Models\ViewReferredCustomer;
 use Carbon\Carbon;
 
 class CustomersController extends Controller
@@ -73,7 +74,7 @@ class CustomersController extends Controller
             $orderColumn = $request->input("columns.$orderColumnIndex.data"); // column name from DataTables
 
             if (!empty($orderColumn)) {
-                $query->orderBy($orderColumn, $orderDir);
+               $query->orderBy($orderColumn, $orderDir);
             }
         }
 
@@ -82,6 +83,243 @@ class CustomersController extends Controller
         // Pagination + ordering
         $customers = $query
             ->orderBy('created_at', 'desc')
+            ->skip($start)
+            ->take($length)
+            ->get();
+
+        // Return response in DataTables format
+        return response()->json([
+            'draw' => intval($draw),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $customers,
+        ]);
+
+    }
+
+    public function capital_customers(Request $request)
+    {
+        // Required DataTables params
+        $draw   = $request->input('draw');
+        $start  = $request->input('start',null);   // offset
+        $length = $request->input('length',2000);  // page size
+        $search = $request->input('search.value'); // global search
+        $d_from = $request->input('d_from'); // global search
+        $d_to = $request->input('d_to'); // global search
+
+        // Base query
+        $query = Customer::select([
+            'customer_tbl.created_at',
+            'customer_tbl.birthCountry',
+            'customer_tbl.phoneNum',
+            'customer_tbl.fullName',
+            'customer_tbl.gender',
+            'customer_tbl.postcode',
+            'customer_tbl.addressLine1',
+            'customer_tbl.dob',
+            'customer_tbl.addressLine2',
+            'customer_tbl.region',
+            'customer_tbl.nationality',
+            'customer_tbl.idNumber',
+            'customer_tbl.status'
+        ])
+        ->join('users','customer_tbl.id','=','users.uuid')
+        ->whereIn('users.onboard_source',['Capital','Both']);
+
+        $recordsTotal = $query->count();
+
+        // Filtering
+        if (!empty($d_from) && !empty($d_to)) {
+            $query=$query->where(function ($q) use ($search,$d_from,$d_to) {
+                $q->whereBetween('customer_tbl.created_at',[$d_from,$d_to]);
+            });
+        }
+
+        if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('customer_tbl.created_at', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.birthCountry', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.phoneNum', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.fullName', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.gender', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.postcode', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.addressLine1', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.dob', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.addressLine2', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.region', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.nationality', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.idNumber', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.status', 'like', "%{$search}%");
+                });
+            }
+
+        if ($request->has('order')) {
+            $orderColumnIndex = $request->input('order.0.column');   // index of column
+            $orderDir = $request->input('order.0.dir', 'asc');      // direction: asc or desc
+            $orderColumn = $request->input("columns.$orderColumnIndex.data"); // column name from DataTables
+
+            if (!empty($orderColumn)) {
+               $query->orderBy($orderColumn, $orderDir);
+            }
+        }
+
+        $recordsFiltered = $query->count();
+
+        // Pagination + ordering
+        $customers = $query
+            ->orderBy('customer_tbl.created_at', 'desc')
+            ->skip($start)
+            ->take($length)
+            ->get();
+
+        // Return response in DataTables format
+        return response()->json([
+            'draw' => intval($draw),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $customers,
+        ]);
+
+    }
+
+    public function capital_partial_onboarding(Request $request)
+    {
+        // Required DataTables params
+        $draw   = $request->input('draw');
+        $start  = $request->input('start',null);   // offset
+        $length = $request->input('length',2000);  // page size
+        $search = $request->input('search.value'); // global search
+        $d_from = $request->input('d_from'); // global search
+        $d_to = $request->input('d_to'); // global search
+
+        // Base query
+        $query = Customer::select([
+            'customer_tbl.created_at',
+            'customer_tbl.birthCountry',
+            'customer_tbl.phoneNum',
+            'customer_tbl.fullName',
+            \DB::raw("CASE WHEN users.password  IS NOT NULL AND users.password != '' THEN true ELSE false END as has_password")
+        ])
+        ->join('users','customer_tbl.id','=','users.uuid')
+        ->whereIn('users.onboard_source',['Capital','Both'])
+        ->where('users.account_verified','0');
+
+        $recordsTotal = $query->count();
+
+        // Filtering
+        if (!empty($d_from) && !empty($d_to)) {
+            $query=$query->where(function ($q) use ($search,$d_from,$d_to) {
+                $q->whereBetween('customer_tbl.created_at',[$d_from,$d_to]);
+            });
+        }
+
+        if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('customer_tbl.created_at', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.birthCountry', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.phoneNum', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.fullName', 'like', "%{$search}%");
+                });
+
+                if($search==true){
+                     $query->whereRaw("users.password IS NOT NULL AND users.password != ''");
+                }
+                else if($search==false){
+                     $query->whereRaw("users.password IS NULL OR users.password = ''");
+                }
+            }
+
+        if ($request->has('order')) {
+            $orderColumnIndex = $request->input('order.0.column');   // index of column
+            $orderDir = $request->input('order.0.dir', 'asc');      // direction: asc or desc
+            $orderColumn = $request->input("columns.$orderColumnIndex.data"); // column name from DataTables
+
+            if (!empty($orderColumn)) {
+               $query->orderBy($orderColumn, $orderDir);
+            }
+        }
+
+        $recordsFiltered = $query->count();
+
+        // Pagination + ordering
+        $customers = $query
+            ->orderBy('customer_tbl.created_at', 'desc')
+            ->skip($start)
+            ->take($length)
+            ->get();
+
+        // Return response in DataTables format
+        return response()->json([
+            'draw' => intval($draw),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $customers,
+        ]);
+
+    }
+
+    public function pay_partial_onboarding(Request $request)
+    {
+        // Required DataTables params
+        $draw   = $request->input('draw');
+        $start  = $request->input('start',null);   // offset
+        $length = $request->input('length',2000);  // page size
+        $search = $request->input('search.value'); // global search
+        $d_from = $request->input('d_from'); // global search
+        $d_to = $request->input('d_to'); // global search
+
+        // Base query
+        $query = Customer::select([
+            'customer_tbl.created_at',
+            'customer_tbl.birthCountry',
+            'customer_tbl.phoneNum',
+            'customer_tbl.fullName',
+            \DB::raw("CASE WHEN users.password  IS NOT NULL AND users.password != '' THEN true ELSE false END as has_password")
+        ])
+        ->join('users','customer_tbl.id','=','users.uuid')
+        ->whereIn('users.onboard_source',['Pay','Both'])
+        ->where('users.account_verified','0');
+
+        $recordsTotal = $query->count();
+
+        // Filtering
+        if (!empty($d_from) && !empty($d_to)) {
+            $query=$query->where(function ($q) use ($search,$d_from,$d_to) {
+                $q->whereBetween('customer_tbl.created_at',[$d_from,$d_to]);
+            });
+        }
+
+        if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('customer_tbl.created_at', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.birthCountry', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.phoneNum', 'like', "%{$search}%")
+                    ->orWhere('customer_tbl.fullName', 'like', "%{$search}%");
+                });
+
+                if($search==true){
+                     $query->whereRaw("users.password IS NOT NULL AND users.password != ''");
+                }
+                else if($search==false){
+                     $query->whereRaw("users.password IS NULL OR users.password = ''");
+                }
+            }
+
+        if ($request->has('order')) {
+            $orderColumnIndex = $request->input('order.0.column');   // index of column
+            $orderDir = $request->input('order.0.dir', 'asc');      // direction: asc or desc
+            $orderColumn = $request->input("columns.$orderColumnIndex.data"); // column name from DataTables
+
+            if (!empty($orderColumn)) {
+               $query->orderBy($orderColumn, $orderDir);
+            }
+        }
+
+        $recordsFiltered = $query->count();
+
+        // Pagination + ordering
+        $customers = $query
+            ->orderBy('customer_tbl.created_at', 'desc')
             ->skip($start)
             ->take($length)
             ->get();
@@ -212,39 +450,67 @@ class CustomersController extends Controller
         $d_to = $request->input('d_to'); // global search
 
         // Base query
-        $query = Customer::select([
-            'customer_tbl.id',
-            'customer_tbl.created_at',
-            'birthCountry',
+        $query = ViewReferredCustomer::select([
+            'id',
+            'created_at',
             'phoneNum',
             'fullName',
-            'customer_tbl.gender',
-            //'gps',
-            'addressLine1',
-            'dob',
-            'district',
             'region',
-            'nationality',
-            'idNumber',
-        ])
-        ->join('users', 'users.uuid', '=', 'customer_tbl.id')
-        ->whereNotNull('users.referral_code');
+            'gender',
+            'totalAmount',
+            'referrer',
+            'status',
+            'referral_code',
+            'id',
+            'referral_link'
+        ]);
 
         $recordsTotal = $query->count();
 
         // Filtering
         if (!empty($d_from) && !empty($d_to)) {
-            $query=$query->where(function ($q) use ($search) {
-                $q->whereBetween('created_at', $d_from,$d_to);
+            $query=$query->where(function ($q) use ($search,$d_from,$d_to) {
+                $q->whereBetween('created_at', [$d_from,$d_to]);
             });
+        }
+
+        $searchable=[
+            'created_at',
+            'phoneNum',
+            'fullName',
+            'region',
+            'gender',
+            'totalAmount',
+            'referrer',
+            'status',
+            'referral_code',
+            //'id',
+            'referral_link'
+        ];
+
+        $query->where(function ($q) use ($searchable, $search) {
+            foreach ($searchable as $column) {
+                $q->orWhere($column, 'like', \DB::raw("'%{$search}%' COLLATE utf8mb4_unicode_ci"));
+            }
+        });
+
+
+
+        if ($request->has('order')) {
+            $orderColumnIndex = $request->input('order.0.column');   // index of column
+            $orderDir = $request->input('order.0.dir', 'asc');      // direction: asc or desc
+            $orderColumn = $request->input("columns.$orderColumnIndex.data"); // column name from DataTables
+
+            if (!empty($orderColumn)) {
+               $query->orderBy($orderColumn, $orderDir);
+            }
         }
 
         $recordsFiltered = $query->count();
 
 
-
         // Pagination + ordering
-        $payments = $query
+        $customers = $query
             ->orderBy('created_at', 'desc')
             ->skip($start)
             ->take($length)
@@ -255,7 +521,7 @@ class CustomersController extends Controller
             'draw' => intval($draw),
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsFiltered,
-            'data' => $payments,
+            'data' => $customers,
         ]);
 
     }

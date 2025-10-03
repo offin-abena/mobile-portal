@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Brassica Dashboard')
-@section('title', 'Dashboard For Brassica Capita')
+@section('sub-title', 'Dashboard For Brassica Capital')
 @section('content')
 <section class="content">
  <div class="row">

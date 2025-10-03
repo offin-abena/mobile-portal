@@ -86,6 +86,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 
+
 @yield('styles')
   </head>
   <!--end::Head-->
@@ -578,7 +579,7 @@
       </li>
     </ul>
   </li>
-  <li class="nav-item {{ request()->routeIs('brassica.dashboard') || request()->routeIs('settlements.capital') || request()->routeIs('customers.partial_onboarding') || request()->routeIs('customers.index') || request()->routeIs('transactions.investments') ? 'menu-open' : '' }}">
+  <li class="nav-item {{ request()->routeIs('brassica.dashboard') || request()->routeIs('settlements.capital') || request()->routeIs('customers.capital.partial_onboarding') || request()->routeIs('customers.capital') || request()->routeIs('transactions.investments') ? 'menu-open' : '' }}">
     <a href="#" class="nav-link">
       <i class="fa fa-signal"></i>
       <p>
@@ -600,13 +601,13 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="{{ route('customers.partial_onboarding') }}" class="nav-link {{ request()->routeIs('customers.partial_onboarding') ? 'active' : '' }}">
+        <a href="{{ route('customers.capital.partial_onboarding') }}" class="nav-link {{ request()->routeIs('customers.capital.partial_onboarding') ? 'active' : '' }}">
           <i class="nav-icon bi bi-circle"></i>
           <p>Partial onboarding</p>
         </a>
       </li>
       <li class="nav-item">
-        <a href="{{ route('customers.index') }}" class="nav-link {{ request()->routeIs('customers.index') ? 'active' : '' }}">
+        <a href="{{ route('customers.capital') }}" class="nav-link {{ request()->routeIs('customers.capital') ? 'active' : '' }}">
           <i class="nav-icon bi bi-circle"></i>
           <p>Customer List</p>
         </a>
@@ -619,7 +620,7 @@
       </li>
     </ul>
   </li>
-  <li class="nav-item {{ request()->routeIs('customers.transactions') || request()->routeIs('transactions.bog_monthly_report') || request()->routeIs('customers.partial_onboarding') || request()->routeIs('customers.customer_report') || request()->routeIs('transactions.index') || request()->routeIs('transactions.monthly_revenue') || request()->routeIs('customers.active_customers') || request()->routeIs('forensics.index') || request()->routeIs('customers.referrals') ? 'menu-open' : '' }}">
+  <li class="nav-item {{ request()->routeIs('customers.transactions') || request()->routeIs('customers.top_selling') || request()->routeIs('transactions.bog_monthly_report') || request()->routeIs('customers.partial_onboarding') || request()->routeIs('customers.customer_report') || request()->routeIs('transactions.index') || request()->routeIs('transactions.monthly_revenue') || request()->routeIs('customers.active_customers') || request()->routeIs('forensics.index') || request()->routeIs('customers.referrals') ? 'menu-open' : '' }}">
     <a href="#" class="nav-link">
       <i class="fa fa-server"></i>
       <p>
@@ -629,7 +630,7 @@
     </a>
     <ul class="nav nav-treeview">
       <li class="nav-item">
-        <a href="{{  request()->routeIs('customers.transactions') }}" class="nav-link {{ request()->routeIs('customers.transactions') ? 'active' : '' }}">
+        <a href="{{  route('customers.top_selling') }}" class="nav-link {{ request()->routeIs('customers.top_selling') ? 'active' : '' }}">
           <i class="nav-icon bi bi-circle"></i>
           <p>Top Selling Customers</p>
         </a>
@@ -800,9 +801,11 @@
         }
       });
     </script>
+    {{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> --}}
+
+
     <!--end::OverlayScrollbars Configure-->
 
-    <!-- OPTIONAL SCRIPTS -->
 
     @yield('scripts')
     <!--end::Script-->

@@ -21,6 +21,10 @@ use App\Models\AccountType;
 use App\Models\Currency;
 use App\Models\Kyc;
 use App\Models\Referrer;
+use App\Models\ProviderService;
+use App\Models\FundSource;
+use App\Models\CapitalSettlement;
+use App\Models\Translation;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,28 +33,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        //Referrer::factory(100)->create();
+        //ProviderService::factory(10)->create();
 
-        //Customer::factory(100)->create();
-        //AccessDevice::factory(1)->create();
-        //User::factory(100)->create();
-        //Admin::factory(100)->create();
-        //ActivityLog::factory(100)->create();
-        //EcgNewData::factory(100)->create();
-        //Maintransaction::factory(100)->create();
-        //TsaTmTransaction::factory(100)->create();
-        //TsaTm::factory(100)->create();
-        //UserEcgMter::factory(100)->create();
-        //Service::factory(8)->create();
-        //UGroup::factory(8)->create();
-        //AccountType::factory(8)->create();
-        //PricingPolicy::factory(10)->create();
+        //$this->call(UserFundSourcesSeeder::class);
 
-        //$this->call(CustomerAccountSeeder::class);
+        //FundSource::factory(10)->create();
 
-        //Currency::factory(4)->create();
-        //Kyc::factory(4)->create();
+        //CapitalSettlement::factory(100)->create();
 
-        Referrer::factory(100)->create();
-
+        Translation::factory(10)->create();
     }
 }

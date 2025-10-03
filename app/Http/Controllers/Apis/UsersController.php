@@ -34,7 +34,7 @@ class UsersController extends Controller
             'b.fullName as AdminName',
             'admins.status',
             'admins.created_at'
-        ])->join('admins as b','admins.adminID','=','b.id');
+        ])->leftJoin('admins as b','admins.adminID','=','b.id');
 
         $recordsTotal = $query->count();
 
@@ -44,7 +44,6 @@ class UsersController extends Controller
                 $q->whereBetween('created_at', $d_from,$d_to);
             });
         }
-
         if (!empty($search)) {
             $query=$query->where(function ($q) use ($search) {
                 $q->where('admins.fullName', 'like', "%{$search}%")

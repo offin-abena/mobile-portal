@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Apis;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Maintransaction;
+use App\Models\Customer;
 
 class DashboardController extends Controller
 {
@@ -48,12 +49,33 @@ class DashboardController extends Controller
                     $data["totalPostpaidCount"] =  $row["count"];
                     $data["totalPostpaidAmount"] =  $row["amount"];
                 }
-                
+
             }
         }
         return response()->json([
             'message'=>'Dashboard fetch successfully',
             'data'=>$data
+        ]);
+    }
+
+    public function get_barchart_data($from,$to){
+
+        //\DB::enableQueryLog();
+       $registrations=Customer::query()
+            ->selectRaw('DATE(created_at) as Day, COUNT(*) as Num')
+            ->whereBetween('created_at', [$from, $to])
+            ->groupBy(\DB::raw('DATE(created_at)'))
+            ->orderBy('Day', 'Desc')
+            ->limit(8)
+            ->get();
+
+        //dd(\DB::getQueryLog());
+
+        return response()->json([
+            'data'=>[
+                'labels'=>$registrations->pluck('Day'),
+                'values'=>$registrations->pluck('Num')
+            ]
         ]);
     }
 }

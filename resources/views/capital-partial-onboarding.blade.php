@@ -1,6 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Translations List')
+@section('title', 'Capital Partially Onboarded')
+@section('sub-title', 'Partially Onboarded Capital Customers List')
 @section('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <!-- DataTables CSS for Bootstrap 5 -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
@@ -26,11 +29,11 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 <script>
  $(document).ready(function () {
-        const table=$('#translations').DataTable({
+        $('#customer-list').DataTable({
             "processing": true,
                 "serverSide": true, // enables server-side processing
                 "ajax": {
-                    "url": "{{ route('api.translations.index') }}", // 🔥 your backend endpoint here
+                    "url": "{{ route('api.customers.capital.partial_onboarding') }}", // 🔥 your backend endpoint here
                     "type": "GET", // or POST if your API expects it
                     "dataSrc": "data" // adjust based on your API JSON structure
                 },
@@ -40,76 +43,42 @@
                 "order": [
                     [0, "desc"]
                 ],
-
                 "language": {
                     "search": "_INPUT_",
-                    "searchPlaceholder": "Search translations list..."
+                    "searchPlaceholder": "Search customers list..."
                 },
                 responsive: true,
                 lengthMenu: [10, 100, 200,500,1000,2000],
                 dom: 'Bfrltip',
                 "columns": [
+                    //{ data: "id", title: "ID" },
                     {
                         data: "created_at",
-                        title: "Entry Date"
+                        title: "Time"
                     },
                     {
-                        data: "platform",
-                        title: "Platform"
+                        data: "phoneNum",
+                        title: "Phone"
                     },
                     {
-                        data: "category",
-                        title: "Category"
-                    },
-                    {
-                        data: "feature",
-                        title: "Feature"
-                    },
-                    {
-                        data: "keyz",
-                        title: "Key"
-                    },
-                    {
-                        data: "textz",
-                        title: "Default Text"
-                    },
-                    {
-                        data: "english",
-                        title: "English"
-                    },
-                    {
-                        data: "pidgin",
-                        title: "Pidgin"
-                    },
-                    {
-                        data: "french",
-                        title: "French"
-                    },
-                    {
-                        data: "spanish",
-                        title: "Spanish"
-                    },
-                    {
-                        data: "swahili",
-                        title: "Swahili"
-                    },
-                    {
-                        data: "arabic",
-                        title: "Arabic"
-                    },
-                    {
-                        data: "updated_at",
-                        title: "Updated"
+                        data: "fullName",
+                        title: "Name"
                     },
                     // {
-                    //     data: null,
-                    //     render: function(data, type, row) {
-                    //         return '<button class="btn btn-sm btn-success view-btn">Details</button>';
-                    //     },
-                    //     orderable: false,
-                    //     searchable: false
+                    //     data: "has_password",
+                    //     title: "Password Configured"
                     // }
-
+                    {
+                        data: 'has_password',
+                        render: function (data, type, row) {
+                        if (type === 'display') {
+                            return data
+                           ? '<i class="fa-solid fa-square-check" style="color:green; font-size:18px;"></i>'
+        : '<i class="fa-regular fa-square" style="color:red; font-size:18px;"></i>';
+                        }
+                        return data; // for sort/filter
+                        }
+                    }
 
                 ],
                 buttons: [{
@@ -134,41 +103,31 @@
                     }
                 ]
 
+
         });
     });
 </script>
 @endsection
 @section('content')
+
 <div class="card shadow-sm">
     <!-- Card Header -->
     <div class="card-header">
-        <h5 class="mb-0">List of Translations</h5>
+        <h5 class="mb-0">This is a list of All Partially Onboarded Customers</h5>
     </div>
     <!-- Card Body -->
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered" id="translations">
+            <table class="table table-striped table-bordered" id="customer-list">
                 <thead class="bg-success text-white">
-                    {{-- <tr>
-                                    <th>#</th>
-                                    <th>Entry Date</th>
-                                    <th>Platform</th>
-                                    <th>Category</th>
-                                    <th>Feature</th>
-                                    <th>Key</th>
-                                    <th>Default Text</th>
-                                    <th>English</th>
-                                    <th>Pidgin</th>
-                                    <th>French</th>
-                                    <th>Spanish</th>
-                                    <th>Swahili</th>
-                                    <th>Arabic</th>
-                                    <th>Updated</th>
-                                    <th>Edit</th>
-                    </tr> --}}
+                    <tr>
+                                    <th>Date</th>
+                                    <th>Phone</th>
+                                    <th>Name</th>
+                                    <th>Password Configured</th>
+                    </tr>
                 </thead>
             </table>
         </div>
     </div>
 @endsection
-

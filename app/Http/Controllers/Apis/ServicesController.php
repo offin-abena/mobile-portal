@@ -124,7 +124,7 @@ class ServicesController extends Controller
 
         return response()->json([
             'statusCode'=>'200',
-            'message' => 'Service created successfully',
+            'message' => 'Service saved successfully',
             'data'    => $service
         ], 200);
     }

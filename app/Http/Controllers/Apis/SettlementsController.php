@@ -4,47 +4,33 @@ namespace App\Http\Controllers\Apis;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\TsaTm;
+use App\Models\CapitalSettlement;
 
-class TsaController extends Controller
+class SettlementsController extends Controller
 {
-    public function index(Request $request){
+    public function capital(Request $request){
         // Required DataTables params
         $draw   = $request->input('draw');
         $start  = $request->input('start',null);   // offset
         $length = $request->input('length',2000);  // page size
         $search = $request->input('search.value'); // global search
-        //$d_from = $request->input('d_from'); // global search
-        //$d_to = $request->input('d_to'); // global search
 
         // Base query
-        $query = TsaTm::select([
-            'phone_num',
-            'reference_code',
-            'full_name',
-            'status',
-            'current_otp',
-            'hashed_current_otp',
-            'password',
-            'amount_limit',
-            'created_at'
-
-        ]);
+        $query = CapitalSettlement::query();
 
         $recordsTotal = $query->count();
 
         if (!empty($search)) {
             $query=$query->where(function ($q) use ($search) {
-                $q->where('phone_num', 'like', "%{$search}%")
-                  ->orWhere('reference_code', 'like', "%{$search}%")
-                  ->orWhere('full_name', 'like', "%{$search}%")
-                  ->orWhere('status', 'like', "%{$search}%")
-                  ->orWhere('amount_limit', 'like', "%{$search}%");
+                $q->where('bank_name', 'like', "%{$search}%")
+                  ->orWhere('account_number', 'like', "%{$search}%")
+                  ->orWhere('amount', 'like', "%{$search}%")
+                  ->orWhere('authorization_code', 'like', "%{$search}%")
+                  ->orWhere('user', 'like', "%{$search}%");
             });
         }
 
         if ($request->has('order')) {
-
             $orderColumnIndex = $request->input('order.0.column');   // index of column
             $orderDir = $request->input('order.0.dir', 'asc');      // direction: asc or desc
             $orderColumn = $request->input("columns.$orderColumnIndex.data"); // column name from DataTables
@@ -57,7 +43,7 @@ class TsaController extends Controller
         $recordsFiltered = $query->count();
 
         // Pagination + ordering
-        $managers = $query
+        $settlements = $query
             ->orderBy('created_at', 'desc')
             ->skip($start)
             ->take($length)
@@ -68,9 +54,7 @@ class TsaController extends Controller
             'draw' => intval($draw),
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsFiltered,
-            'data' => $managers,
+            'data' => $settlements,
         ]);
     }
-
-    
 }

@@ -158,7 +158,7 @@ class PricingPoliciesController extends Controller
 
         return response()->json([
             'statusCode'=>'200',
-            'message' => 'Pricing created successfully',
+            'message' => 'Pricing saved successfully',
             'data'    => $pricing
         ], 200);
     }

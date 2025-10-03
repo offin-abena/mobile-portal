@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Traits\LogsHttpErrors;
+use App\Models\CapitalSettlement;
 
 class SettlementsController extends Controller
 {
@@ -58,6 +59,16 @@ class SettlementsController extends Controller
                     }
 
                     session()->flash('success', 'Settlement successful!');
+
+                    //Log the settlemnt into the capital settlement table
+                    CapitalSettlement::create([
+                        'bank_name'=>$account_name,
+                        'account_number'=>$validated['account_no'],
+                        'amount'=>$validated['amount'],
+                        'authorization_code'=>$validated['code'],
+                        'user'=>auth()->user()->fullName,
+                        'user_phone'=>auth()->user()->phoneNum
+                    ]);
                 }
                 else{
                     $this->logHttpError('Settlement failed:', $response);

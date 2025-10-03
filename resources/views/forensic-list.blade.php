@@ -28,18 +28,93 @@
     <script>
         $(document).ready(function() {
             $('#forensic-list').DataTable({
-                "pageLength": 10, // show 10 rows per page
-                "ordering": true, // enable column sorting
-                "searching": true, // enable search box
+                "processing": true,
+                "serverSide": true, // enables server-side processing
+                "ajax": {
+                    "url": "{{ route('api.forensics.index') }}", // 🔥 your backend endpoint here
+                    "type": "GET", // or POST if your API expects it
+                    "dataSrc": "data" // adjust based on your API JSON structure
+                },
+                "pageLength": 10,
+                "ordering": true,
+                "searching": true,
                 "order": [
                     [0, "desc"]
-                ], // default sort by "Time" column
+                ],
                 "language": {
                     "search": "_INPUT_",
-                    "searchPlaceholder": "Search forensic list..."
+                    "searchPlaceholder": "Search transactions list..."
                 },
                 responsive: true,
-                dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
+                lengthMenu: [10, 100, 200,500,1000,2000],
+                dom: 'Bfrltip',
+                "columns": [
+                    {
+                        data: "Date",
+                        title: "Date"
+                    },
+                    {
+                        data: "Account",
+                        title: "Account"
+                    },
+                    {
+                        data: "Full Name",
+                        title: "Phone"
+                    },
+                    {
+                        data: "Fund Source Provider",
+                        title: "Fund Source Provider"
+                    },
+                    {
+                        data: "Fund Source Number",
+                        title: "Fund Source Number"
+                    },
+                    {
+                        data: "Fund Source Name",
+                        title: "Fund Source Name"
+                    },
+                    {
+                        data: "Amount",
+                        title: "Amount"
+                    },
+                    {
+                        data: "T-Type",
+                        title: "T-Type"
+                    },
+                    {
+                        data: "Trnx ID",
+                        title: "Trnx ID"
+                    },
+                    {
+                        data: "T-Status",
+                        title: "T-Status"
+                    },
+                    {
+                        data: "Momo Recipient Name",
+                        title: "Momo Recipient Name"
+                    },
+                    {
+                        data: "Momo Recipient Number",
+                        title: "Momo Recipient Number"
+                    },
+                    {
+                        data: "Bank Recipient Name",
+                        title: "Bank Recipient Name"
+                    },
+                    {
+                        data: "Bank Name",
+                        title: "Bank Name"
+                    },
+                    {
+                        data: "Bank Account Number",
+                        title: "Bank Account Number"
+                    },
+                    {
+                        data: "B_BUS_ID",
+                        title: "B_BUS_ID"
+                    },
+
+                ],
                 buttons: [{
                         extend: 'copy',
                         className: 'btn btn-secondary'
@@ -60,6 +135,7 @@
                         extend: 'print',
                         className: 'btn btn-info'
                     }
+
                 ]
 
             });

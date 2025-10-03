@@ -9,7 +9,7 @@
         <div class="table-responsive">
             <table class="table table-striped align-middle" id="translations">
                 <thead class="table-light">
-                    <tr>
+                    {{-- <tr>
                                     <th>#</th>
                                     <th>Entry Date</th>
                                     <th>Platform</th>
@@ -25,7 +25,7 @@
                                     <th>Arabic</th>
                                     <th>Updated</th>
                                     <th>Edit</th>
-                    </tr>
+                    </tr> --}}
                 </thead>
                 <tbody>
                     <!-- Table rows go here -->

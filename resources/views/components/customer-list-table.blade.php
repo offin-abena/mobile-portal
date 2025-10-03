@@ -1,7 +1,7 @@
 <div class="card shadow-sm">
     <!-- Card Header -->
     <div class="card-header">
-        <h5 class="mb-0">This is a list of All Customers</h5>
+        <h5 class="mb-0">This is a list of  Customers</h5>
     </div>
     <!-- Card Body -->
     <div class="card-body">

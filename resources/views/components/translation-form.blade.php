@@ -1,14 +1,14 @@
- <form role="form" method="post">
+ <form id="frmTranslation" role="form" method="post">
+    <input type="hidden" id="ref" name="ref"/>
      <div class="card card-success card-outline">
          <div class="card-header">
-             <h3 class="card-title">Add New User</h3>
+             <h3 class="card-title">Add New /Update User</h3>
          </div>
          <div class="card-body">
              @csrf
              <div class="box box-default">
                  <div class="box-header with-border">Update Selected Entry</div>
                  <div class="box-body">
-                     <form role="form" method="post">
 
                          <div class="row">
                              <div class="col-md-6 mb-2 mb-md-2">
@@ -64,7 +64,7 @@
                                  <div class="form-group">
                                      <label for="english"> English Text</label>
                                      <input type="text" value="" name="english" required class="form-control"
-                                         id="text">
+                                         id="english">
                                  </div>
 
                              </div>
@@ -75,14 +75,14 @@
                                  <div class="form-group">
                                      <label for="pidgin">Pidgin Text</label>
                                      <input type="text" value="" name="pidgin" required class="form-control"
-                                         id="text">
+                                         id="pidgin">
                                  </div>
                              </div>
                              <div class="col-md-6 mb-2 mb-md-2">
                                  <div class="form-group">
                                      <label for="french">French Text</label>
                                      <input type="text" value="" name="french" required class="form-control"
-                                         id="text">
+                                         id="french">
                                  </div>
                              </div>
                          </div>
@@ -93,14 +93,14 @@
                                  <div class="form-group">
                                      <label for="spanish">Spanish Text</label>
                                      <input type="text" value="" name="spanish" required class="form-control"
-                                         id="text">
+                                         id="spanish">
                                  </div>
                              </div>
                              <div class="col-md-6 mb-2 mb-md-2">
                                  <div class="form-group">
                                      <label for="swahili">Swahili Text</label>
                                      <input type="text" value="" name="swahili" required class="form-control"
-                                         id="text">
+                                         id="swahili">
                                  </div>
                              </div>
                          </div>
@@ -111,7 +111,7 @@
                                  <div class="form-group">
                                      <label for="arabic">Arabic Text</label>
                                      <input type="text" value="" name="arabic" required
-                                         class="form-control" id="text">
+                                         class="form-control" id="arabic">
                                  </div>
                              </div>
                              <div class="col-md-6">
@@ -131,7 +131,7 @@
                                 </select>
                             </div> -->
 
-                     </form>
+
                  </div>
              </div>
          </div>

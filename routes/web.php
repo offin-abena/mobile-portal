@@ -33,8 +33,16 @@ Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])
     ->name('logout')->middleware('auth');
 
+Route::get('customers/capital/partial-onboardings', [App\Http\Controllers\CustomersController::class,'capital_partial_onboarding'])
+    ->middleware('auth')->name('customers.capital.partial_onboarding');
+
 Route::get('customers/{profile}/transactions', [App\Http\Controllers\CustomersController::class,'profile'])
     ->middleware('auth')->name('customers.transactions');
+
+
+
+Route::get('customers/capital', [App\Http\Controllers\CustomersController::class,'capital_customers'])
+    ->middleware('auth')->name('customers.capital');
 
 Route::get('customers/active-customers', [App\Http\Controllers\CustomersController::class,'active_customers'])
     ->middleware('auth')->name('customers.active_customers');
@@ -45,6 +53,7 @@ Route::get('customers/report', [App\Http\Controllers\CustomersController::class,
 Route::get('customers/top-selling', [App\Http\Controllers\CustomersController::class,'top_selling'])
     ->middleware('auth')->name('customers.top_selling');
 
+
 Route::get('customers/partial-onboardings', [App\Http\Controllers\CustomersController::class,'partial_onboarding'])
     ->middleware('auth')->name('customers.partial_onboarding');
 
@@ -52,7 +61,7 @@ Route::get('customers/partial-onboardings', [App\Http\Controllers\CustomersContr
 Route::get('referrers', [App\Http\Controllers\ReferrersController::class,'index'])
     ->middleware('auth')->name('referrers.index');
 
-Route::get('customers/referrals', [App\Http\Controllers\CustomersController::class,'index'])
+Route::get('customers/referrals', [App\Http\Controllers\CustomersController::class,'referrals'])
     ->middleware('auth')->name('customers.referrals');
 
 Route::resource('customers', App\Http\Controllers\CustomersController::class)
@@ -169,6 +178,8 @@ Route::resource('forensics', App\Http\Controllers\ForensicsController::class)
 //====== API Routes ======//
 Route::prefix('api')->middleware('auth')->group(function () {
 
+    Route::post('terminals/process', [App\Http\Controllers\Apis\TerminalsController::class,'process'])->name('api.terminals.process');
+
     Route::post('services', [App\Http\Controllers\Apis\ServicesController::class,'create'])->name('api.services.create');
 
     Route::get('services',[App\Http\Controllers\Apis\ServicesController::class, 'index'])->name('api.services.index');
@@ -177,32 +188,47 @@ Route::prefix('api')->middleware('auth')->group(function () {
     Route::get('meters/transactions',[App\Http\Controllers\Apis\MeterTransactionsController::class, 'index'])->name('api.meters.transactions');
     Route::get('meters',[App\Http\Controllers\Apis\MetersController::class, 'index'])->name('api.meters.index');
 
+    Route::get('vendors/tgl/search',[App\Http\Controllers\Apis\VendorsController::class, 'search_tgl_vendors'])->name('api.vendors.tgl.search');
     Route::get('vendors/search',[App\Http\Controllers\Apis\VendorsController::class, 'search'])->name('api.vendors.search');
+
+    Route::get('vendors/{vendor}/branches',[App\Http\Controllers\Apis\VendorsController::class, 'branches'])->name('api.vendors.branches');
+
     Route::get('vendors',[App\Http\Controllers\Apis\VendorsController::class, 'vendorDatabase'])->name('api.vendors.index');
 
+    Route::get('transactions/flagged',[App\Http\Controllers\Apis\TransactionsController::class, 'flagged_transactions'])->name('api.transactions.flagged');
+
     Route::get('transactions/refunded',[App\Http\Controllers\Apis\TransactionsController::class, 'refundedTransactions'])->name('api.transactions.refunded');
+
     Route::get('transactions/refundcandidates',[App\Http\Controllers\Apis\TransactionsController::class, 'refundCandidates'])->name('api.transactions.refundCandidates');
 
     Route::get('transactions/failed-to-write',[App\Http\Controllers\Apis\TransactionsController::class, 'failedToWrite'])->name('api.transactions.failedToWrite');
     Route::match(['get','post'],'transactions',[App\Http\Controllers\Apis\TransactionsController::class, 'index'])->name('api.transactions.index');
 
+    Route::get('transactions/bog-monthly-report',[App\Http\Controllers\Apis\TransactionsController::class, 'bog_monthly_report'])->name('api.transactions.bog_monthly_report');
+
+    Route::post('transactions/monthly-revenue',[App\Http\Controllers\Apis\TransactionsController::class, 'monthly_revenue'])->name('api.transactions.monthly_revenue');
+
     Route::get('users/audit-trail',[App\Http\Controllers\Apis\UsersController::class, 'audit_trail'])->name('api.users.audit_trail');
     Route::get('users/admins',[App\Http\Controllers\Apis\UsersController::class, 'admins'])->name('api.users.admins');
     Route::post('users/admins/change-status',[App\Http\Controllers\Apis\UsersController::class, 'change_status_admin'])->name('api.users.admins.status.change');
 
+    Route::get('customers/capital/partial-onboarding',[App\Http\Controllers\Apis\CustomersController::class, 'capital_partial_onboarding'])->name('api.customers.capital.partial_onboarding');
+    Route::get('customers/pay/partial-onboarding',[App\Http\Controllers\Apis\CustomersController::class, 'pay_partial_onboarding'])->name('api.customers.pay.partial_onboarding');
+
     Route::get('customers/active-transactions',[App\Http\Controllers\Apis\CustomersController::class, 'active_customers'])->name('api.customers.active.transactions');
-    
+
     Route::get('customers/referred',[App\Http\Controllers\Apis\CustomersController::class, 'referred'])->name('api.customers.referred');
     Route::get('customers/top-selling',[App\Http\Controllers\Apis\CustomersController::class, 'top_selling_cutomers'])->name('api.customers.top-selling');
     Route::post('customers/{profile}/profiles',[App\Http\Controllers\Apis\CustomersController::class, 'profile'])->name('api.customers.profile');
 
     Route::put('customers/{profile}/profiles',[App\Http\Controllers\Apis\CustomersController::class, 'update_customer'])->name('api.customers.profile.update');
 
+    Route::get('customers/capital',[App\Http\Controllers\Apis\CustomersController::class, 'capital_customers'])->name('api.customers.capital');
+
     Route::get('customers',[App\Http\Controllers\Apis\CustomersController::class, 'index'])->name('api.customers.index');
 
     Route::get('customers/system_accounts',[App\Http\Controllers\Apis\CustomersController::class, 'system_accounts'])->name('api.system.accounts');
     Route::post('customers/system_accounts',[App\Http\Controllers\Apis\CustomersController::class, 'create_system_account'])->name('api.system.account.create');
-
 
     Route::post('prices/create',[App\Http\Controllers\Apis\PricingPoliciesController::class, 'create'])->name('api.prices.create');
     Route::get('prices',[App\Http\Controllers\Apis\PricingPoliciesController::class, 'index'])->name('api.prices.index');
@@ -215,9 +241,20 @@ Route::prefix('api')->middleware('auth')->group(function () {
     Route::post('settings',[App\Http\Controllers\Apis\SystemSettingController::class, 'toggle_status'])->name('api.settings.toggle_status');
 
     Route::get('kycs',[App\Http\Controllers\Apis\kycsController::class, 'index'])->name('api.kycs.index');
+
     Route::post('dashboard/{from}/{to}/summaries',[App\Http\Controllers\Apis\DashboardController::class, 'get_special_transactions_summary'])->name('api.dashboard.summaries');
+    Route::post('dashboard/{from}/{to}/barchart',[App\Http\Controllers\Apis\DashboardController::class, 'get_barchart_data'])->name('api.dashboard.barchart');
 
     Route::post('referrers/save/{referrer?}', [App\Http\Controllers\Apis\ReferrersController::class,'save'])->name('api.referrers.save');
-    
+
     Route::get('referrers', [App\Http\Controllers\Apis\ReferrersController::class,'index'])->name('api.referrers.index');
+
+    Route::get('forensics', [App\Http\Controllers\Apis\ForensicsController::class,'index'])->name('api.forensics.index');
+
+    Route::get('settlements/capital', [App\Http\Controllers\Apis\SettlementsController::class,'capital'])->name('api.settlements.capital');
+
+    Route::post('translations/{translation?}', [App\Http\Controllers\Apis\TranslationsController::class,'save'])->name('api.translations.save');
+
+    Route::get('translations', [App\Http\Controllers\Apis\TranslationsController::class,'index'])->name('api.translations.index');
+
 });

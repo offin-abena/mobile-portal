@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Customer List')
+@section('title', 'Capital Customer List')
 @section('styles')
     <!-- DataTables CSS for Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
@@ -30,7 +30,7 @@
                 "processing": true,
                 "serverSide": true, // enables server-side processing
                 "ajax": {
-                    "url": "{{ route('api.customers.index') }}", // 🔥 your backend endpoint here
+                    "url": "{{ route('api.customers.capital') }}", // 🔥 your backend endpoint here
                     "type": "GET", // or POST if your API expects it
                     "dataSrc": "data" // adjust based on your API JSON structure
                 },

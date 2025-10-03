@@ -15,6 +15,11 @@ class CustomersController extends Controller
         return view('customer-list');
     }
 
+    public function capital_customers()
+    {
+        return view('capital-customer-list');
+    }
+
     public function referrals()
     {
         return view('customer-referrals');
@@ -23,6 +28,11 @@ class CustomersController extends Controller
     public function partial_onboarding(){
         return view('partial-onboarding');
     }
+
+    public function capital_partial_onboarding(){
+        return view('capital-partial-onboarding');
+    }
+
 
     public function top_selling(){
         return view('top-selling-customers');

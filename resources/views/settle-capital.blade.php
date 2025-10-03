@@ -28,38 +28,71 @@
 <script>
  $(document).ready(function () {
         $('#settle-capital-list').DataTable({
-            "pageLength": 10,      // show 10 rows per page
-            "ordering": true,      // enable column sorting
-            "searching": true,     // enable search box
-            "order": [[0, "desc"]], // default sort by "Time" column
-            "language": {
-                "search": "_INPUT_",
-                "searchPlaceholder": "Search capital list..."
-            },
-            responsive: true,
-            dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
-            buttons: [
-            {
-                extend: 'copy',
-                className: 'btn btn-secondary'
-            },
-            {
-                extend: 'csv',
-                className: 'btn btn-success'
-            },
-            {
-                extend: 'excel',
-                className: 'btn btn-success'
-            },
-            {
-                extend: 'pdf',
-                className: 'btn btn-danger'
-            },
-            {
-                extend: 'print',
-                className: 'btn btn-info'
-            }
-        ]
+          "processing": true,
+                "serverSide": true, // enables server-side processing
+                "ajax": {
+                    "url": "{{ route('api.settlements.capital') }}", // 🔥 your backend endpoint here
+                    "type": "GET", // or POST if your API expects it
+                    "dataSrc": "data" // adjust based on your API JSON structure
+                },
+                "pageLength": 10,
+                "ordering": true,
+                "searching": true,
+                "order": [
+                    [0, "desc"]
+                ],
+
+                "language": {
+                    "search": "_INPUT_",
+                    "searchPlaceholder": "Search settlements list..."
+                },
+                responsive: true,
+                lengthMenu: [10, 100, 200,500,1000,2000],
+                dom: 'Bfrltip',
+                "columns": [
+                    {
+                        data: "bank_name",
+                        title: "Name of Bank / Account Name"
+                    },
+                    {
+                        data: "account_number",
+                        title: "Account Number"
+                    },
+                    {
+                        data: "amount",
+                        title: "Amount"
+                    },
+                    {
+                        data: "authorization_code",
+                        title: "Authorization Code"
+                    },
+                    {
+                        data: "user",
+                        title: "User"
+                    }
+
+                ],
+                buttons: [{
+                        extend: 'copy',
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'csv',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'btn btn-danger'
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-info'
+                    }
+                ]
 
         });
     });
